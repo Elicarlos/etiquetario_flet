@@ -183,6 +183,13 @@ def home(page: ft.Page):
             )
         ]
     )
+    temperaturas = controller.obter_temperatura
+    dropdown_temperatura = ft.Dropdown(
+        label="Selecione a temperatura",
+        hint_text="Selecione a temperatura",
+        # options=[ft.dropdown.Option(temperatura) for temperatura in temperaturas],
+        options=[]
+    )
 
     dropdown_etiquetas = ft.Dropdown(
                         label="Selecione uma etiqueta",
@@ -194,6 +201,7 @@ def home(page: ft.Page):
     impressoras_disponiveis =  obter_impressoras()
     dropdown_impressoras = ft.Dropdown(
         hint_text="Selecione a impressora",
+        
         options=[ft.dropdown.Option(impressora) for impressora in impressoras_disponiveis],
         width=300
     )
@@ -207,12 +215,13 @@ def home(page: ft.Page):
         content=ft.Container(
             expand=True,
             width=400,
-            height=350,
+            # height=350,
             margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
             content=ft.Column(
                 controls=[
                     ft.TextField(label="Fabricação"),
                     ft.TextField(label="Vencimento"),
+                    dropdown_temperatura,
                     dropdown_impressoras,
                     dropdown_etiquetas
                     ,

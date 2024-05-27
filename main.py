@@ -9,7 +9,7 @@ from components.tipo import tipo
 from components.banco_dados import banco_dados
 from components.tipo import tipo
 from components.etiquetas import etiquetas
-
+from components.tempertura import temperatura
 
 
 def main(page: ft.Page):
@@ -56,6 +56,7 @@ def main(page: ft.Page):
     tipo_container = tipo(page)
     banco_dados_container = banco_dados(page)
     etiquetas_container = etiquetas(page)
+    temperatura_container = temperatura(page)
         
     content_container = ft.Container(
         bgcolor=ft.colors.WHITE,
@@ -105,6 +106,7 @@ def main(page: ft.Page):
                 ft.ListTile(title=ft.TextButton(text="Empresa",  on_click=lambda _: show_only(empresa_container))),
                 ft.ListTile(title=ft.TextButton(text="Produto", on_click=lambda _: show_only(produto_container))),
                 ft.ListTile(title=ft.TextButton(text="Tipo",  on_click=lambda _: show_only(tipo_container))),
+                ft.ListTile(title=ft.TextButton(text="Temperatura",on_click=lambda _: show_only(temperatura_container))),
 
                 ],
         ),
@@ -116,6 +118,7 @@ def main(page: ft.Page):
             controls=[
                 ft.ListTile(title=ft.TextButton(text="Banco de Dados",on_click=lambda _: show_only(banco_dados_container))),
                 ft.ListTile(title=ft.TextButton(text="Etiquetas",on_click=lambda _: show_only(etiquetas_container))),
+                
                 ],
         ),
         ]
