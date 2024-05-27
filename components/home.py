@@ -1,8 +1,85 @@
+import importlib.util
 import flet as ft
 from controllers import Controller
+import os
+from pathlib import Path
+import win32print
 
 def home(page: ft.Page):
-    controller = Controller()  
+    controller = Controller()
+    
+
+    
+    
+    
+    def carregar_etiquetas():
+        p = Path(__file__).parent
+        diretorio_etiquetas = p / '../etiquetas'
+        etiquetas_disponiveis = []
+        if diretorio_etiquetas.exists():
+            etiquetas = [f for f in os.listdir(diretorio_etiquetas) if f.endswith('.py') and f != '__init__.py']
+            etiquetas_disponiveis = [f[:20] for f in etiquetas]
+            
+        else:
+            print('Sem diretorio de etiquetas')
+        
+        return etiquetas_disponiveis
+    
+    def obter_impressoras():
+            impressoras = []
+            for printer in win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL):
+                impressoras.append(printer[2])
+            return impressoras
+        
+    def criar_etiqueta(id_produto, etiqueta_selecionada):
+        path_etiqueta = Path(__file__).parent / '../etiquetas' / f'{etiqueta_selecionada}.py'
+        
+        if path_etiqueta.exists():
+            print('Etiqueta Existe dentro do método')
+            spec = importlib.util.spec_from_file_location(etiqueta_selecionada, path_etiqueta)
+            etiqueta_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(etiqueta_module)
+            return etiqueta_module.criar_etiqueta(id_produto)
+        
+        else:
+            print(f"Arquivo de etiqueta {etiqueta_selecionada}.py nao encontrada")
+            
+    
+    def imprimir_etiqueta(e):
+        conteudo = ""
+        impressora = dropdown_impressoras.value
+        quantidade = int(quantidade_impressao_textfield.value)
+        
+        dados = {
+            'Conteudo': conteudo,
+            'Impressora': impressora,
+            'Quantidade': quantidade
+        }
+        print(dados)
+        
+ 
+        if impressora is None:
+            impressora = win32print.GetDefaultPrinter()
+        
+        handle_impressora = win32print.OpenPrinter(impressora)
+        try:
+            conteudo_bytes = conteudo.encode('utf-8')
+            job = win32print.StartDocPrinter(handle_impressora, 1, ("Impressão de Etiqueta", None, "RAW"))
+            for _ in range(quantidade):
+                win32print.StartPagePrinter(handle_impressora)
+                win32print.WritePrinter(handle_impressora, conteudo_bytes)
+                win32print.EndPagePrinter(handle_impressora)
+            win32print.EndDocPrinter(handle_impressora)
+        finally:
+            win32print.ClosePrinter(handle_impressora)
+        print(f'Etiqueta impressa com sucesso {quantidade} vezes!')
+    
+    
+    
+    
+    
+            
+            
     
     def abrir_dialog_produto(e, produto_id=None):
         if produto_id:
@@ -23,6 +100,19 @@ def home(page: ft.Page):
         page.update()
         
     def abrir_dialog_print(e):
+        etiquetas_disponiveis = carregar_etiquetas()
+       
+        if etiquetas_disponiveis:
+            dropdown_etiquetas.options = [ft.dropdown.Option(etiqueta) for etiqueta in etiquetas_disponiveis]
+            dropdown_etiquetas.update()  # Atualize o dropdown com as novas opções
+            
+        
+        else:
+            page.snack_bar = ft.SnackBar(
+                content=ft.Text('Nenhuma etiqueta disponível ou diretório não encontrado!'),
+                bgcolor=ft.colors.RED
+            )
+            page.snack_bar.open = True
         dialog_print.open = True
         page.update()
 
@@ -93,12 +183,21 @@ def home(page: ft.Page):
             )
         ]
     )
-    vencimento = ft.DatePicker( date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY)
-    vencimento = ft.DatePicker( date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY)
-    vencimento = ft.DatePicker( date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY)
-    etiqueta = ft.Dropdown()
-    vencimento = ft.DatePicker( date_picker_entry_mode=ft.DatePickerEntryMode.CALENDAR_ONLY)
+
+    dropdown_etiquetas = ft.Dropdown(
+                        label="Selecione uma etiqueta",
+                        hint_text="Selecione a etiqueta",                                       
+                        
+                        options=[]
+                        )
     
+    impressoras_disponiveis =  obter_impressoras()
+    dropdown_impressoras = ft.Dropdown(
+        hint_text="Selecione a impressora",
+        options=[ft.dropdown.Option(impressora) for impressora in impressoras_disponiveis],
+        width=300
+    )
+    quantidade_impressao_textfield = ft.TextField(label="Quantidade", )  
     
     dialog_print = ft.AlertDialog(
         modal=True,
@@ -114,14 +213,9 @@ def home(page: ft.Page):
                 controls=[
                     ft.TextField(label="Fabricação"),
                     ft.TextField(label="Vencimento"),
-                    ft.Dropdown(
-                        hint_text="Selecione a etiqueta",
-                        border_radius=ft.border_radius.all(2),
-                        bgcolor=ft.colors.GREY_100,
-                        color=ft.colors.BLUE,
-                        border_width=0,
-                        options=[]
-                    ),
+                    dropdown_impressoras,
+                    dropdown_etiquetas
+                    ,
                     ft.Dropdown(
                         hint_text="Sexo",
                         options=[
@@ -130,7 +224,7 @@ def home(page: ft.Page):
                         ]
                         
                     ),
-                    ft.TextField(label="Quantidade", )             
+                    quantidade_impressao_textfield                               
 
                 ]
             )
@@ -144,7 +238,7 @@ def home(page: ft.Page):
                     bgcolor=ft.colors.BLUE,
                     color=ft.colors.WHITE
                 ),
-                on_click=lambda e: salvar_novo_tipo(dialog_tipo)
+                on_click=lambda e: imprimir_etiqueta(dialog_tipo)
             )
         ],
     

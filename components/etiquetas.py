@@ -1,7 +1,9 @@
 import flet as ft
 # from components.search import search
 
-def etiquetas(page: ft.Page):
+
+def etiquetas(page: ft.Page):  
+            
     localhost_field = ft.TextField(
         label="Localhost",
         hint_text="Localhost",

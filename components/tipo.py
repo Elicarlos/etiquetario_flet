@@ -1,13 +1,26 @@
 import flet as ft
 from controllers import Controller
+from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro
+
+
 
 def tipo(page: ft.Page):
     controller = Controller()
+    
+    success_color = ft.colors.GREEN
+    error_color = ft.colors.RED
     
     tipo_atual = None
     
     itens_por_pagina = 5
     pagina_atual = 1
+    
+    # def alert(mensagem, bgcolor_message):
+    #     page.snack_bar = ft.SnackBar(
+    #             content=ft.Text(mensagem),
+    #             bgcolor=bgcolor_message,                
+    #         )
+    #     page.snack_bar.open = True
 
     def obter_total_tipos():
         return len(controller.obter_tipo())  # Supondo que temos uma função para obter o número total de tipos
@@ -158,23 +171,32 @@ def tipo(page: ft.Page):
     def salvar_novo_tipo(e):
         novo_tipo = novo_tipo_field.value
         if novo_tipo:  # Certifique-se de que algo foi digitado
-            if tipo_atual:
-                controller.atualizar_tipo(tipo_atual.id, novo_tipo)  # Atualiza o tipo existente
-                mensagem = 'Tipo atualizado com sucesso!'
-            else:
-                print("Aquui")
-                controller.criar_tipo(novo_tipo)  # Cria um novo tipo
-                mensagem = 'Tipo adicionado com sucesso!'
+            try:
+                if tipo_atual:
+                    controller.atualizar_tipo(tipo_atual.id, novo_tipo)  # Atualiza o tipo existente
+                    mensagem = 'Tipo atualizado com sucesso!'
+                    exibir_mensagem_sucesso(page, mensagem)
+                 
+                else:            
+                    controller.criar_tipo(novo_tipo)  # Cria um novo tipo
+                    mensagem = 'Tipo adicionado com sucesso!'
+                    exibir_mensagem_sucesso(page, mensagem)
+                    
+            except Exception as erro:
+                mensagem = f'Erro ao salvar o tipo: {str(erro)}'
+                exibir_mensagem_erro(page, mensagem)
+     
             
             fechar_popup_tipo(e)            
             nonlocal total_tipos
             total_tipos = obter_total_tipos()
             atualizar_tabela(None)
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text(mensagem),
-                bgcolor=ft.colors.GREEN
-            )
-            page.snack_bar.open = True
+            # page.snack_bar = ft.SnackBar(
+            #     content=ft.Text(mensagem),
+            #     bgcolor=ft.colors.GREEN,                
+            # )
+            # page.snack_bar.open = True
+           
             page.update()
             
  

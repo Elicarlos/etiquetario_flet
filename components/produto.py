@@ -49,9 +49,7 @@ def produto(page: ft.Page):
     tipo_carne_dropdown = ft.Dropdown(
         label="Tipo de Carne",
         border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        border_width=0,
+        border_width=1,
         options=[]
     )
 
