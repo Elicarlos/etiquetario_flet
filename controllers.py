@@ -108,8 +108,8 @@ class Controller:
     
     @staticmethod
     def obter_temperatura():
-        temperatura = Temperatura.select().dicts()
-        return list(temperatura)
+        temperatura = Temperatura.select()
+        return temperatura
     
     # @staticmethod
     # def obter_temperatura():

@@ -77,7 +77,7 @@ class ItemNutricional(Base):
     informacoes_adicionais = TextField(null=True)
 
 class Temperatura(Base):
-    temperatura = CharField()
+    temperatura = CharField(max_length=250)
 
 # Conectar e criar tabelas
 db.connect()

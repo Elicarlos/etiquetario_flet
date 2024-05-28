@@ -11,6 +11,35 @@ from components.tipo import tipo
 from components.etiquetas import etiquetas
 from components.tempertura import temperatura
 
+class CustomExpansionTile(ft.UserControl):
+    def __init__(self, title, content, on_click=None):
+        super().__init__()
+        self.title = title
+        self.content = content
+        self.on_click = on_click
+        self.expanded = False
+
+    def build(self):
+        return ft.Column(
+            controls=[
+                ft.ListTile(
+                    title=self.title,
+                    on_click=self.handle_click,
+                    trailing=None,  # Remove a seta padrão
+                    shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+                ),
+                self.content if self.expanded else ft.Container()
+            ]
+        )
+
+    def handle_click(self, e):
+        if self.on_click:
+            self.on_click(e)
+        self.expanded = not self.expanded
+        self.update()
+
+
+
 
 def main(page: ft.Page):
     current_content = [None]
@@ -93,11 +122,12 @@ def main(page: ft.Page):
     sidbar = ft.Column(
         width=240,
         controls=[
-            ft.ExpansionTile(
-                title=ft.Text("INÍCIO"),on_change=lambda _: show_only(home_container),
-                maintain_state=True,
-                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),        
-          ),
+            ft.ListTile(
+                title=ft.Text("INÍCIO"),
+                on_click=lambda e: show_only(home_container),
+                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+            ),
+             
             ft.ExpansionTile(
             title=ft.Text("CADASTRO"),         
             maintain_state=True,      
@@ -153,7 +183,7 @@ def main(page: ft.Page):
         footer
     )
 
-    page.bgcolor = ft.colors.GREY_100
+    page.bgcolor = '#EDF1F4'
     show_only(home_container)
     page.update()
 

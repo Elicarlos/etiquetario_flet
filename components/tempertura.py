@@ -2,39 +2,30 @@ import flet as ft
 from controllers import Controller
 from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro
 
-
-
 def temperatura(page: ft.Page):
     controller = Controller()
-    tipo_atual = None
+    temperatura_atual = None
     
     itens_por_pagina = 5
     pagina_atual = 1
-    
-    # def alert(mensagem, bgcolor_message):
-    #     page.snack_bar = ft.SnackBar(
-    #             content=ft.Text(mensagem),
-    #             bgcolor=bgcolor_message,                
-    #         )
-    #     page.snack_bar.open = True
 
-    def obter_total_tipos():
-        return len(controller.obter_tipo())  # Supondo que temos uma função para obter o número total de tipos
+    def obter_total_temperatura():
+        return len(controller.obter_temperatura())  # Supondo que temos uma função para obter o número total de temperaturas
     
-    total_tipos = obter_total_tipos()  
+    total_temperatura = obter_total_temperatura()  
 
-    def abrir_dialog_tipo(e, tipo=None):
-        nonlocal tipo_atual
-        tipo_atual = tipo
-        if tipo:
-            novo_tipo_field.value = tipo.tipo
+    def abrir_dialog_temperatura(e, temperatura=None):
+        nonlocal temperatura_atual
+        temperatura_atual = temperatura
+        if temperatura:
+            nova_temperatura_field.value = temperatura.temperatura
         else:
-            novo_tipo_field.value = ""
-        dialog_tipo.open = True
+            nova_temperatura_field.value = ""
+        dialog_temperatura.open = True
         page.update()
 
-    def fechar_popup_tipo(e):
-        dialog_tipo.open = False
+    def fechar_popup_temperatura(e):
+        dialog_temperatura.open = False
         page.update()
 
     search_input = ft.TextField(
@@ -47,20 +38,11 @@ def temperatura(page: ft.Page):
         width=500,
     )
     
-    tipo_carne_dropdown = ft.Dropdown(
-        label="Tipo de Carne",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        border_width=0,
-        options=[]
-    )
+    nova_temperatura_field = ft.TextField(label="Nova Temperatura")
 
-    novo_tipo_field = ft.TextField(label="Novo Tipo")
-
-    dialog_tipo = ft.AlertDialog(
+    dialog_temperatura = ft.AlertDialog(
         modal=True,
-        title=ft.Text(value="Adicionar Tipo"),
+        title=ft.Text(value="Adicionar Temperatura"),
         elevation=0,
         shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
         content=ft.Container(
@@ -69,11 +51,11 @@ def temperatura(page: ft.Page):
             height=200,
             margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
             content=ft.Column(
-                controls=[novo_tipo_field]
+                controls=[nova_temperatura_field]
             )
         ),
         actions=[
-            ft.TextButton("Fechar", on_click=fechar_popup_tipo),
+            ft.TextButton("Fechar", on_click=fechar_popup_temperatura),
             ft.ElevatedButton(
                 text="Salvar",
                 style=ft.ButtonStyle(
@@ -81,28 +63,28 @@ def temperatura(page: ft.Page):
                     bgcolor=ft.colors.BLUE,
                     color=ft.colors.WHITE
                 ),
-                on_click=lambda e: salvar_novo_tipo(dialog_tipo)
+                on_click=lambda e: salvar_nova_temperatura(e)
             )
         ]
     )    
     
-    page.overlay.append(dialog_tipo)
+    page.overlay.append(dialog_temperatura)
     page.update()
     
-    def carregar_tipos(pagina_atual, itens_por_pagina):
-        tipos = controller.obter_tipo()
+    def carregar_temperatura(pagina_atual, itens_por_pagina):
+        temperaturas = controller.obter_temperatura()
         inicio = (pagina_atual - 1) * itens_por_pagina
         fim = inicio + itens_por_pagina
-        return tipos[inicio:fim]
+        return temperaturas[inicio:fim]
 
-    def gerar_linhas_tabela(tipos):
+    def gerar_linhas_tabela(temperaturas):
         rows = []
-        for tipo in tipos:
+        for temperatura in temperaturas:
             rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(value=tipo.id)),
-                        ft.DataCell(ft.Text(value=tipo.tipo)),                     
+                        ft.DataCell(ft.Text(value=temperatura.id)),
+                        ft.DataCell(ft.Text(value=temperatura.temperatura)),                     
                         ft.DataCell(
                             ft.Row(
                                 controls=[
@@ -110,13 +92,13 @@ def temperatura(page: ft.Page):
                                         text=".",
                                         icon=ft.icons.EDIT,
                                         width=50,
-                                        on_click=lambda e, tipo=tipo: abrir_dialog_tipo(e, tipo)
+                                        on_click=lambda e, temperatura=temperatura: abrir_dialog_temperatura(e, temperatura)
                                     ),
                                     ft.ElevatedButton(
                                         text=".",
                                         icon=ft.icons.DELETE,
                                         width=50,
-                                        on_click=lambda e, tipo_id=tipo.id: deletar_tipo(e, tipo_id)
+                                        on_click=lambda e, temperatura_id=temperatura.id: deletar_temperatura(e, temperatura_id)
                     
                                     ),
                                 ],
@@ -128,71 +110,54 @@ def temperatura(page: ft.Page):
             )
         return rows
     
-    # def deletar_tipo(e, tipo_id):
-    #     controller.excluir_tipo(tipo_id)
-    #     nonlocal total_tipos
-    #     total_tipos = obter_total_tipos()  # Atualiza o total de tipos
-    #     atualizar_tabela(None)  # Atualiza a tabela para refletir a exclusão
-    #     page.snack_bar = ft.SnackBar(
-    #         content=ft.Text('Tipo deletado com sucesso!'),
-    #         bgcolor=ft.colors.RED
-    #     )
-    #     page.snack_bar.open = True
-    #     page.update()
-    
-    def deletar_tipo(e, tipo_id):
-        controller.excluir_tipo(tipo_id)
-        nonlocal total_tipos, pagina_atual
-        total_tipos = obter_total_tipos()  # Atualiza o total de tipos
+    def deletar_temperatura(e, temperatura_id):
+        controller.excluir_temperatura(temperatura_id)
+        nonlocal total_temperatura, pagina_atual
+        total_temperatura = obter_total_temperatura()  # Atualiza o total de temperaturas
         # Verifica se a página atual deve ser reduzida após a exclusão
-        if (pagina_atual - 1) * itens_por_pagina >= total_tipos and pagina_atual > 1:
+        if (pagina_atual - 1) * itens_por_pagina >= total_temperatura and pagina_atual > 1:
             pagina_atual -= 1
         atualizar_tabela(None)  # Atualiza a tabela para refletir a exclusão
-        page.snack_bar = ft.SnackBar(
-            content=ft.Text('Tipo deletado com sucesso!'),
-            bgcolor=ft.colors.RED
-        )
-        page.snack_bar.open = True
-        page.update()
-    
+        exibir_mensagem_sucesso(page, 'Temperatura deletada com sucesso!')
 
     def atualizar_tabela(e):
-        tipos_pagina = carregar_tipos(pagina_atual, itens_por_pagina)
+        temperatura_pagina = carregar_temperatura(pagina_atual, itens_por_pagina)
         tabela.rows.clear()
-        tabela.rows.extend(gerar_linhas_tabela(tipos_pagina))
+        tabela.rows.extend(gerar_linhas_tabela(temperatura_pagina))
         paginacao_controls.controls[1].value = f"Página {pagina_atual}"
         page.update()
 
-    
-    def salvar_novo_tipo(e):
-        novo_tipo = novo_tipo_field.value
-        if novo_tipo:  # Certifique-se de que algo foi digitado
+    def salvar_nova_temperatura(e):
+        nova_temperatura = nova_temperatura_field.value
+        if nova_temperatura:  # Certifique-se de que algo foi digitado
+            dados = {
+                'temperatura': nova_temperatura
+            }
             try:
-                if tipo_atual:
-                    controller.atualizar_tipo(tipo_atual.id, novo_tipo)  # Atualiza o tipo existente
-                    mensagem = 'Tipo atualizado com sucesso!'
+                if temperatura_atual:
+                    controller.atualizar_temperatura(temperatura_atual.id, dados)  # Atualiza a temperatura existente
+                    mensagem = 'Temperatura atualizada com sucesso!'
                     exibir_mensagem_sucesso(page, mensagem)
-                 
                 else:            
-                    controller.criar_tipo(novo_tipo)  # Cria um novo tipo
-                    mensagem = 'Tipo adicionado com sucesso!'
+                    controller.salvar_temperatura(dados)  # Cria uma nova temperatura
+                    mensagem = 'Temperatura adicionada com sucesso!'
                     exibir_mensagem_sucesso(page, mensagem)
                     
             except Exception as erro:
-                mensagem = f'Erro ao salvar o tipo: {str(erro)}'
+                mensagem = f'Erro ao salvar a temperatura: {str(erro)}'
                 exibir_mensagem_erro(page, mensagem)
      
-            
-            fechar_popup_tipo(e)            
-            nonlocal total_tipos
-            total_tipos = obter_total_tipos()
-            atualizar_tabela(None)          
+            fechar_popup_temperatura(e)            
+            nonlocal total_temperatura
+            total_temperatura = obter_total_temperatura()
+            atualizar_tabela(None)
             page.update()
+        else:
+            exibir_mensagem_erro(page, "Por favor, insira uma temperatura válida.")
             
- 
     def proxima_pagina(e):
         nonlocal pagina_atual
-        if pagina_atual * itens_por_pagina < total_tipos:
+        if pagina_atual * itens_por_pagina < total_temperatura:
             pagina_atual += 1
             atualizar_tabela(e)
 
@@ -221,10 +186,10 @@ def temperatura(page: ft.Page):
     tabela = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text(value="Código")),
-            ft.DataColumn(ft.Text(value="Tipo")),            
+            ft.DataColumn(ft.Text(value="Temperatura")),            
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        rows=gerar_linhas_tabela(carregar_tipos(pagina_atual, itens_por_pagina)),
+        rows=gerar_linhas_tabela(carregar_temperatura(pagina_atual, itens_por_pagina)),
         expand=True
     )
 
@@ -244,8 +209,8 @@ def temperatura(page: ft.Page):
                     controls=[
                         search_row,
                         ft.ElevatedButton(
-                            text="Adicionar Tipo",
-                            on_click=abrir_dialog_tipo,
+                            text="Adicionar Temperatura",
+                            on_click=abrir_dialog_temperatura,
                             icon=ft.icons.ADD,
                             style=ft.ButtonStyle(
                                 shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),

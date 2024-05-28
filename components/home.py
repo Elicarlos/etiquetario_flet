@@ -6,11 +6,7 @@ from pathlib import Path
 import win32print
 
 def home(page: ft.Page):
-    controller = Controller()
-    
-
-    
-    
+    controller = Controller()   
     
     def carregar_etiquetas():
         p = Path(__file__).parent
@@ -45,18 +41,7 @@ def home(page: ft.Page):
             print(f"Arquivo de etiqueta {etiqueta_selecionada}.py nao encontrada")
             
     
-    def imprimir_etiqueta(e):
-        conteudo = ""
-        impressora = dropdown_impressoras.value
-        quantidade = int(quantidade_impressao_textfield.value)
-        
-        dados = {
-            'Conteudo': conteudo,
-            'Impressora': impressora,
-            'Quantidade': quantidade
-        }
-        print(dados)
-        
+    def imprimir_etiqueta(conteudo, impressora, quantidade):       
  
         if impressora is None:
             impressora = win32print.GetDefaultPrinter()
@@ -73,6 +58,23 @@ def home(page: ft.Page):
         finally:
             win32print.ClosePrinter(handle_impressora)
         print(f'Etiqueta impressa com sucesso {quantidade} vezes!')
+        
+        
+    def imprimir(e):
+        conteudo = ""
+        impressora = dropdown_impressoras.value
+        quantidade = int(quantidade_impressao_textfield.value)
+        
+        dados = {
+            'Conteudo': conteudo,
+            'Impressora': impressora,
+            'Quantidade': quantidade
+        }
+        print(dados)
+        
+        # if dados_produto:
+        #     id_produto = dados_produto
+        #     etiqueta_selecionada = 
     
     
     
@@ -183,12 +185,14 @@ def home(page: ft.Page):
             )
         ]
     )
-    temperaturas = controller.obter_temperatura
+    temperaturas = controller.obter_temperatura()
+    for t in temperaturas:
+        print(t.temperatura)
     dropdown_temperatura = ft.Dropdown(
         label="Selecione a temperatura",
         hint_text="Selecione a temperatura",
-        # options=[ft.dropdown.Option(temperatura) for temperatura in temperaturas],
-        options=[]
+        options=[ft.dropdown.Option(temperatura.temperatura) for temperatura in temperaturas],
+        
     )
 
     dropdown_etiquetas = ft.Dropdown(
@@ -740,28 +744,7 @@ def home(page: ft.Page):
             )
             page.snack_bar.open = True
             page.update()
-
-
-    # def dialog_print(e, produto_id):
-    #     abrir_dialog_print(e)
-    #     page.update()
-        # try:
-        #     controller.excluir_item_nutricional(produto_id)
-        #     atualizar_tabela(None)
-        #     page.snack_bar = ft.SnackBar(
-        #         content=ft.Text('Produto excluído com sucesso!'),
-        #         bgcolor=ft.colors.GREEN
-        #     )
-        #     page.snack_bar.open = True
-        #     page.update()
-        # except Exception as ex:
-        #     page.snack_bar = ft.SnackBar(
-        #         content=ft.Text(f'Erro ao excluir produto: {str(ex)}'),
-        #         bgcolor=ft.colors.RED
-        #     )
-        #     page.snack_bar.open = True
-        #     page.update()
-        
+   
     def editar_produto(e, produto_id):
         produto = controller.obter_item_nutricional_por_id(produto_id)
         if produto:

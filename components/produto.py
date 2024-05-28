@@ -14,6 +14,34 @@ def produto(page: ft.Page):
             atualizar_dropdown_tipo(selecionar_ultimo=True)
             dialog_produto.open = True
             page.update()
+            
+    def create_text_field(label=None, width=None, expand=False, multiline=False, height=None):
+        return ft.TextField(
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )
+        
+    def create_small_text_field(width=100):
+        return ft.TextField(
+            width=width,
+            expand=True,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.GREY_100,
+            color=ft.colors.BLUE,
+            hover_color=ft.colors.GREY_100,
+            border_width=1,
+            height=35,
+            content_padding=ft.padding.all(10),
+        )
 
 
     def fechar_dialog_produto(e):
@@ -83,427 +111,84 @@ def produto(page: ft.Page):
         ]
     )
     
-    codigo_field = ft.TextField(label="Código")
+    codigo_field = create_text_field(label="Código", width=200)
     
-    corte_field = ft.TextField(label="Descrição")
+    corte_field = create_text_field(label="Descrição",expand=True)
     
-    preco_field = ft.TextField(label="Preço")
+    preco_field = create_text_field(label="Preço", width=200)
     
-    codigo_barras_field = ft.TextField(
-        label="Codigo de Barras",
-        width=150,
-        border_radius=ft.border_radius.all(3),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    codigo_barras_field = create_text_field(label="Código de Barras", width=200)   
     
-    porcao_embalagem_field = ft.TextField(
-        label="Porção por Embalagem",
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    porcao_embalagem_field = create_text_field(label="Porção por Embalagem", expand=True)
+        
+    porcao_field = create_text_field(label="Porção", expand=True)
     
-    porcao_field = ft.TextField(
-        label="Porção",
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
     
-    adicional_field = ft.TextField(
-        label="Campo Adicional",
-        multiline=True,
-        expand=True,
-        height=100,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
-    
-    informacao_adicional_field = ft.TextField(
-        label="Campo Adicional",
-        multiline=True,
-        expand=True,
-        height=100,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    informacao_adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
  
  
     
-    valor_energico_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10),
-    )
+    valor_energico_field_100 = create_small_text_field()
     
-    valor_energico_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    valor_energico_field_0 = create_small_text_field()
+       
     
-    valor_energico_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    valor_energico_field_vd = create_small_text_field()
     
-    carboidratos_totais_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    carboidratos_totais_field_100 = create_small_text_field()
     
-    carboidratos_totais_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    carboidratos_totais_field_0 = create_small_text_field()
     
-    carboidratos_totais_field_vd =ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    carboidratos_totais_field_vd = create_small_text_field()
     
-    acucares_totais_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_totais_field_100 = create_small_text_field()
     
-    acucares_totais_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_totais_field_0 = create_small_text_field()
     
-    acucares_totais_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_totais_field_vd = create_small_text_field()
     
-    acucares_adicionados_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_adicionados_field_100 = create_small_text_field()
     
-    acucares_adicionados_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_adicionados_field_0 = create_small_text_field()
     
-    acucares_adicionados_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_adicionados_field_vd = create_small_text_field()
     
-    proteinas_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    proteinas_field_100 = create_small_text_field()
     
-    proteinas_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    proteinas_field_0 = create_small_text_field()
     
-    proteinas_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    proteinas_field_vd = create_small_text_field()
     
-    gorduras_totais_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_totais_field_100 = create_small_text_field()
     
-    gorduras_totais_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_totais_field_0 = create_small_text_field()
     
-    gorduras_totais_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_totais_field_vd = create_small_text_field()
     
-    gorduras_saturadas_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_saturadas_field_100 = create_small_text_field()
     
-    gorduras_saturadas_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_saturadas_field_0 = create_small_text_field()
     
-    gorduras_saturadas_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_saturadas_field_vd = create_small_text_field()
 
-    gorduras_trans_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_trans_field_100 = create_small_text_field()
     
-    gorduras_trans_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_trans_field_0 = create_small_text_field()
     
-    gorduras_trans_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_trans_field_vd = create_small_text_field()
    
-    fibra_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    fibra_field_100 = create_small_text_field()
     
-    fibra_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    fibra_field_0 = create_small_text_field()
     
-    fibra_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    fibra_field_vd = create_small_text_field()
     
-    sodio_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    sodio_field_100 = create_small_text_field()
     
-    sodio_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    sodio_field_0 = create_small_text_field()
     
-    sodio_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    sodio_field_vd = create_small_text_field()
  
     def salvar_novo_produto(e, produto_id=None):
         
@@ -648,11 +333,7 @@ def produto(page: ft.Page):
             sodio_field_0.value = str(produto.sodio_porcao)
             sodio_field_vd.value = str(produto.sodio_vd)
 
-            # dialog_produto.actions[-1].on_click = lambda e: salvar_novo_produto(e, produto_id)
-        
-            # Atualiza o dropdown de tipos antes de abrir o diálogo
-            # atualizar_dropdown_tipo(selecionar_ultimo=False)
-            
+           
             atualizar_dropdown_tipo()
 
             # Certifique-se de que o tipo_id corresponde a uma opção no dropdown
