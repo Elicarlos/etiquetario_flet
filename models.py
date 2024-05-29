@@ -1,7 +1,18 @@
 from peewee import *
 from datetime import datetime
+import json
 
-db = SqliteDatabase('etiquetario.db')
+with open('db_config.json', 'r') as config_file:
+    config = json.load(config_file)
+
+# db = SqliteDatabase('etiquetario.db')
+db = MySQLDatabase(
+    config['database'],
+    user = config['user'],
+    password = config['password'] ,
+    host= config['localhost'],
+    port = int(config['port']),
+)
 
 class Base(Model):
     created_at = DateTimeField(default=datetime.now)
@@ -32,6 +43,7 @@ class ItemNutricional(Base):
     codigo_barras = CharField(null=True)
     porcao_embalagem = CharField(null=True)
     porcao = CharField(null=True)
+    peso = CharField(max_length=150)
     campo_adicional = CharField(null=True)
     
     valor_energetico_100g = CharField(max_length=100, null=True)

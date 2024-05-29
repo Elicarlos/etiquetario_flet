@@ -22,6 +22,7 @@ def home(page: ft.Page):
         porcao_embalagem_field.value = ""
         porcao_field.value = ""
         adicional_field.value = ""
+        peso_field.value = ""
         informacao_adicional_field.value = ""
         valor_energico_field_100.value = ""
         valor_energico_field_0.value = ""
@@ -355,6 +356,8 @@ def home(page: ft.Page):
     
     adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
     
+    peso_field = create_text_field(label="Peso", width=200)
+    
     informacao_adicional_field = create_text_field(label="Informação Adicional", multiline=True, expand=True)
     
     valor_energico_field_100 = create_small_text_field()
@@ -409,6 +412,7 @@ def home(page: ft.Page):
             'porcao_embalagem': porcao_embalagem_field.value,
             'porcao': porcao_field.value,
             'campo_adicional': adicional_field.value,
+            'peso': peso_field.value,
             'informacoes_adicionais': informacao_adicional_field.value,
             'valor_energetico_100g': valor_energico_field_100.value,
             'valor_energetico_porcao': valor_energico_field_0.value,
@@ -586,7 +590,8 @@ def home(page: ft.Page):
                                                 ),
                                                 ft.Row(
                                                     controls =[
-                                                        adicional_field
+                                                        adicional_field,
+                                                        peso_field
                                                     ]
                                                 ),
                                                 ft.Row(

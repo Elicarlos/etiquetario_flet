@@ -55,6 +55,17 @@ def banco_dados(page: ft.Page):
         border_width=1,
         password=True  # Este campo será tratado como senha
     )
+    
+    port_field = ft.TextField(
+        label="Port",
+        hint_text="Port",
+        value=config.get('port', ''),
+        border_radius=ft.border_radius.all(2),
+        bgcolor=ft.colors.WHITE,
+        hover_color=ft.colors.WHITE,
+        border_width=1,
+        password=True  # Este campo será tratado como senha
+    )
 
     def salvar_dados_conexao(e):
         print("Salvando dados de conexão...")
@@ -62,7 +73,8 @@ def banco_dados(page: ft.Page):
             'localhost': localhost_field.value,
             'database': database_field.value,
             'user': user_field.value,
-            'password': password_field.value
+            'password': password_field.value,
+            'port': port_field
         }
 
         salvar_configuracao(config)
@@ -92,6 +104,7 @@ def banco_dados(page: ft.Page):
                             ft.Row(controls=[database_field]),
                             ft.Row(controls=[user_field]),
                             ft.Row(controls=[password_field]),
+                             ft.Row(controls=[port_field]),
                         ]
                     ),
                     margin=ft.margin.Margin(right=0, top=15, left=0, bottom=0)
