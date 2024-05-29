@@ -2,6 +2,24 @@ from models import Empresa, Temperatura, Tipo, ItemNutricional, db
 
 
 class Controller:
+    
+    @staticmethod
+    def pesquisa(termo_pesquisa):
+     
+        # Realizar pesquisa no banco de dados usando o Peewee ORM
+        resultados = (ItemNutricional
+                    .select()
+                    .where(
+                        (ItemNutricional.codigo == termo_pesquisa) |
+                        (ItemNutricional.codigo_barras.contains(termo_pesquisa)) |
+                        (ItemNutricional.corte.contains(termo_pesquisa))
+                    ))
+        
+        # Convertendo os resultados para uma lista de objetos ItemNutricional
+        lista_resultados = list(resultados)  # 'resultados' já é um iterable de objetos ItemNutricional
+        return lista_resultados
+
+    
     @staticmethod
     def criar_empresa(cnpj, razao_social, fantasia, numero_sif, registro_adapi):
         with db.atomic():
@@ -123,7 +141,7 @@ class Controller:
     
     @staticmethod
     def obter_item_nutricional():
-        return ItemNutricional.select()
+        return list(ItemNutricional.select())
     
     @staticmethod
     def obter_tipo_all():
