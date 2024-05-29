@@ -1,5 +1,3 @@
-
-
 from components.produto import produto
 from controllers import Controller
 import flet as ft
@@ -38,14 +36,9 @@ class CustomExpansionTile(ft.UserControl):
         self.expanded = not self.expanded
         self.update()
 
-
-
-
 def main(page: ft.Page):
     current_content = [None]
-        
-    
-           
+
     def exibir_mensagem_sucesso(mensagem):
         page.snack_bar = ft.SnackBar(
             ft.Text(mensagem),
@@ -54,30 +47,46 @@ def main(page: ft.Page):
         page.snack_bar.open = True
         page.update()
         
-    def atualizar_home_container():
-        nonlocal home_container
-        home_container = home(page)
-        if current_content[0] == home_container:
-            content_container.content = home_container
-            page.update()
-        
-        
-        
     def exibir_mensagem_erro(mensagem):
         page.snack_bar = ft.SnackBar(
             ft.Text(mensagem),
             bgcolor=ft.colors.RED,
         )
         page.snack_bar.open = True
-        page.update() 
+        page.update()
 
-        
+    def atualizar_home_container():
+        nonlocal home_container
+        home_container = home(page)
+
+    def atualizar_empresa_container():
+        nonlocal empresa_container
+        empresa_container = empresa(page)
+
+    def atualizar_produto_container():
+        nonlocal produto_container
+        produto_container = produto(page)
+
+    def atualizar_tipo_container():
+        nonlocal tipo_container
+        tipo_container = tipo(page)
+
+    def atualizar_banco_dados_container():
+        nonlocal banco_dados_container
+        banco_dados_container = banco_dados(page)
+
+    def atualizar_etiquetas_container():
+        nonlocal etiquetas_container
+        etiquetas_container = etiquetas(page)
+
+    def atualizar_temperatura_container():
+        nonlocal temperatura_container
+        temperatura_container = temperatura(page)
     
-    def show_only(container):        
+    def show_only(container):
         current_content[0] = container
         content_container.content = container
         page.update()
-        
         
     home_container = home(page)
     empresa_container = empresa(page)
@@ -90,7 +99,7 @@ def main(page: ft.Page):
     content_container = ft.Container(
         bgcolor=ft.colors.WHITE,
         margin=ft.margin.Margin(left=0, top=10, right=20, bottom=10),
-        content=current_content[0] if current_content[0] else home_container,  # Inicialmente mostrando o container home
+        content=current_content[0] if current_content[0] else home_container,
         expand=True
     )    
         
@@ -104,11 +113,9 @@ def main(page: ft.Page):
                 ft.Text("Política de Privacidade"),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
-           
         ),      
         height=50,    
         margin=ft.margin.Margin(left=-10, top=1, right=-10, bottom=-10),      
-    
     )
     
     page.appbar = ft.AppBar(
@@ -116,7 +123,6 @@ def main(page: ft.Page):
         bgcolor=ft.colors.WHITE,
         color=ft.colors.GREY_900,
         title=ft.Text("W Carnes"),
-            
     )
     
     sidbar = ft.Column(
@@ -124,52 +130,44 @@ def main(page: ft.Page):
         controls=[
             ft.ListTile(
                 title=ft.Text("INÍCIO"),
-                on_click=lambda e: show_only(home_container),
+                on_click=lambda e: [atualizar_home_container(), show_only(home_container)],
                 shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
             ),
-             
             ft.ExpansionTile(
-            title=ft.Text("CADASTRO"),         
-            maintain_state=True,      
-            shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
-            controls=[                
-                ft.ListTile(title=ft.TextButton(text="Empresa",  on_click=lambda _: show_only(empresa_container))),
-                ft.ListTile(title=ft.TextButton(text="Produto", on_click=lambda _: show_only(produto_container))),
-                ft.ListTile(title=ft.TextButton(text="Tipo",  on_click=lambda _: show_only(tipo_container))),
-                ft.ListTile(title=ft.TextButton(text="Temperatura",on_click=lambda _: show_only(temperatura_container))),
-
+                title=ft.Text("CADASTRO"),         
+                maintain_state=True,      
+                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+                controls=[                
+                    ft.ListTile(title=ft.TextButton(text="Empresa", on_click=lambda _: [atualizar_empresa_container(), show_only(empresa_container)])),
+                    ft.ListTile(title=ft.TextButton(text="Produto", on_click=lambda _: [atualizar_produto_container(), show_only(produto_container)])),
+                    ft.ListTile(title=ft.TextButton(text="Tipo", on_click=lambda _: [atualizar_tipo_container(), show_only(tipo_container)])),
+                    ft.ListTile(title=ft.TextButton(text="Temperatura", on_click=lambda _: [atualizar_temperatura_container(), show_only(temperatura_container)])),
                 ],
-        ),
-         ft.ExpansionTile(
-            title=ft.Text("CONFIGURAÇÃO"),         
-          
-            maintain_state=True,
-            shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
-            controls=[
-                ft.ListTile(title=ft.TextButton(text="Banco de Dados",on_click=lambda _: show_only(banco_dados_container))),
-                ft.ListTile(title=ft.TextButton(text="Etiquetas",on_click=lambda _: show_only(etiquetas_container))),
-                
+            ),
+            ft.ExpansionTile(
+                title=ft.Text("CONFIGURAÇÃO"),         
+                maintain_state=True,
+                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+                controls=[
+                    ft.ListTile(title=ft.TextButton(text="Banco de Dados", on_click=lambda _: [atualizar_banco_dados_container(), show_only(banco_dados_container)])),
+                    ft.ListTile(title=ft.TextButton(text="Etiquetas", on_click=lambda _: [atualizar_etiquetas_container(), show_only(etiquetas_container)])),
                 ],
-        ),
+            ),
         ]
     )
     
-   
-  
     page.add(
         ft.Row(
             controls=[
                 sidbar,
                 ft.Column(
                     controls=[
-                        # search,
                         ft.Container(
                             bgcolor=ft.colors.WHITE,
                             margin=ft.margin.Margin(left=0, top=10, right=20, bottom=10),
                             content=ft.Column(
                                 controls=[
                                     content_container
-                                    
                                 ],
                             ),
                             expand=True
@@ -182,7 +180,7 @@ def main(page: ft.Page):
         ),
         footer
     )
-    
+
     page.bgcolor = '#EDF1F4'
     show_only(home_container)
     page.update()
