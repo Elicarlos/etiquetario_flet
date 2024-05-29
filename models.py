@@ -10,7 +10,7 @@ db = MySQLDatabase(
     config['database'],
     user = config['user'],
     password = config['password'] ,
-    host= config['localhost'],
+    host= config['host'],
     port = int(config['port']),
 )
 

@@ -15,7 +15,7 @@ def banco_dados(page: ft.Page):
 
     config = carregar_configuracao()
 
-    localhost_field = ft.TextField(
+    host_field = ft.TextField(
         label="Localhost",
         hint_text="Localhost",
         value=config.get('localhost', ''),
@@ -70,7 +70,7 @@ def banco_dados(page: ft.Page):
     def salvar_dados_conexao(e):
         print("Salvando dados de conexão...")
         config = {
-            'localhost': localhost_field.value,
+            'host': host_field.value,
             'database': database_field.value,
             'user': user_field.value,
             'password': password_field.value,
@@ -100,7 +100,7 @@ def banco_dados(page: ft.Page):
                 ft.Container(
                     ft.Column(
                         controls=[
-                            ft.Row(controls=[localhost_field]),
+                            ft.Row(controls=[host_field]),
                             ft.Row(controls=[database_field]),
                             ft.Row(controls=[user_field]),
                             ft.Row(controls=[password_field]),

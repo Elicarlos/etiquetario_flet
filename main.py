@@ -8,6 +8,8 @@ from components.banco_dados import banco_dados
 from components.tipo import tipo
 from components.etiquetas import etiquetas
 from components.tempertura import temperatura
+from config.config import carregar_configuracao, salvar_configuracao
+from utils.teste_conexao import testar_conexao
 
 class CustomExpansionTile(ft.UserControl):
     def __init__(self, title, content, on_click=None):
@@ -42,6 +44,44 @@ def main(page: ft.Page):
     page.window_maximized = True
     page.window_min_width = 1280 
     page.window_min_height = 720
+    
+    config = carregar_configuracao()
+    
+    if not testar_conexao(config):       
+    
+        novo_tipo_field = ft.TextField(label="Novo Tipo")
+
+        dialog_tipo = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(value="Adicionar Tipo"),
+            elevation=0,
+            shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+            content=ft.Container(
+                expand=True,
+                width=400,
+                height=200,
+                margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
+                content=ft.Column(
+                    controls=[novo_tipo_field]
+                )
+            ),
+            actions=[
+                # ft.TextButton("Fechar", on_click=fechar_popup_tipo),
+                ft.ElevatedButton(
+                    text="Salvar",
+                    style=ft.ButtonStyle(
+                        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+                        bgcolor=ft.colors.BLUE,
+                        color=ft.colors.WHITE
+                    ),
+                    # on_click=lambda e: salvar_novo_tipo(dialog_tipo)
+                )
+            ]
+        )    
+        
+        page.overlay.append(dialog_tipo)
+        
+        page.update()
 
     def exibir_mensagem_sucesso(mensagem):
         page.snack_bar = ft.SnackBar(
@@ -91,6 +131,13 @@ def main(page: ft.Page):
         current_content[0] = container
         content_container.content = container
         page.update()
+        
+        
+    # Função para salvar dados de conexão
+    
+    
+        
+    
         
     home_container = home(page)
     empresa_container = empresa(page)
