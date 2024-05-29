@@ -105,7 +105,24 @@ class Controller:
             print("Produto salvo com sucesso!")
         except Exception as e:
             print(f"Erro ao salvar produto: {e}")
+            
+            
+    @staticmethod
+    def salvar_temperatura(dados_produto):
+        # Lógica para salvar o produto, por exemplo, em um banco de dados
+        # Certifique-se de implementar essa lógica adequadamente
+        print("Salvando temperatura:", dados_produto)
 
+        try:
+            with db.atomic():
+                # Criar instância do modelo ItemNutricional
+                temperatura = Temperatura.create(**dados_produto)
+                print(f'Tipo {temperatura.id} salvo com sucesso!')
+        except Exception as e:
+            print(f'Erro ao salvar tipo: {str(e)}')
+            
+            
+   
     @staticmethod
     def atualizar_temperatura(item_id, valores_entradas):
         return Temperatura.update(**valores_entradas).where(Temperatura.id == item_id).execute()

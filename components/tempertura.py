@@ -77,7 +77,7 @@ def temperatura(page: ft.Page):
     page.update()
     
     def carregar_temperatura(pagina_atual, itens_por_pagina):
-        temperaturas = controller.obter_temperatura()
+        temperaturas = controller.obter_temperatura()        
         inicio = (pagina_atual - 1) * itens_por_pagina
         fim = inicio + itens_por_pagina
         return temperaturas[inicio:fim]

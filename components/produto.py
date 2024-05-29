@@ -114,17 +114,90 @@ def produto(page: ft.Page):
         page.update()
         abrir_dialog_produto(e)
         
-    search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Busca", width=500)
+    def carregar_produtos(pagina_atual, itens_por_pagina):
+        produtos = controller.obter_item_nutricional()
+        inicio = (pagina_atual - 1) * itens_por_pagina
+        fim = inicio + itens_por_pagina
+        return produtos[inicio:fim]
     
-    # search_input = ft.TextField(
-    #     hint_text="Busque por código, código de barras ou nome do produto...",
-    #     border_radius=ft.border_radius.all(2),
-    #     bgcolor=ft.colors.WHITE,
-    #     hover_color=ft.colors.WHITE,
-    #     color=ft.colors.BLUE,
-    #     border_width=1,
-    #     width=500,
-    # )
+    def gerar_linhas_tabela(produtos):
+               
+        rows = []
+        for produto in produtos:
+            if isinstance(produto, dict):
+                codigo = produto.get('codigo')
+                corte = produto.get('corte')
+                tipo_id = produto.get('tipo_id')
+                preco = produto.get('preco')
+                produto_id = produto.get('id')               
+                
+          
+            else:  # Assume que é um objeto ItemNutricional
+                codigo = produto.codigo
+                corte = produto.corte
+                tipo_id = produto.tipo_id
+                preco = produto.preco 
+                produto_id = produto.id   
+            rows.append(
+                ft.DataRow(
+                    cells=[
+                        ft.DataCell(ft.Text(value=str(codigo))),
+                        ft.DataCell(ft.Text(value=str(corte))),
+                        ft.DataCell(ft.Text(value=str(tipo_id))),  # Certifique-se de que tipo_id é o atributo correto
+                        ft.DataCell(ft.Text(value=str(preco))),
+                        ft.DataCell(
+                            ft.Row(
+                                controls=[
+                                    ft.ElevatedButton(
+                                        text=".",
+                                        icon=ft.icons.EDIT,
+                                        width=50,
+                                        on_click=lambda e, p=produto_id: abrir_dialog_produto(e, p)
+                                    ),
+                                    ft.ElevatedButton(
+                                        text=".",
+                                        icon=ft.icons.DELETE,
+                                        width=50,
+                                        on_click=lambda e, p=produto_id: deletar_produto(e, p)
+                                    ),
+                                ],
+                                spacing=10,
+                            ),
+                        ),
+                    ]
+                )
+            )
+        return rows   
+    
+    tabela = ft.DataTable(
+        columns=[
+            ft.DataColumn(ft.Text(value="Código")),
+            ft.DataColumn(ft.Text(value="Corte")),
+            ft.DataColumn(ft.Text(value="Tipo")),
+            ft.DataColumn(ft.Text(value="Preço")),
+            ft.DataColumn(ft.Text(value="Ações")),
+        ],
+        # rows=[],
+        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina)),
+        expand=True
+    )
+        
+    def atualizar_tabela(e):
+        termo_busca = search_input.value
+        if termo_busca:
+            produtos_pagina = controller.pesquisa(termo_busca)
+        else:
+            produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
+            
+        tabela.rows.clear()
+        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina))
+        paginacao_controls.controls[1].value = f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"
+        tabela.update()
+        page.update()
+
+    search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Busca", width=500)
+    search_input.on_change = atualizar_tabela
+
     
     tipo_carne_dropdown = ft.Dropdown(
         label="Tipo de Carne",
@@ -551,48 +624,7 @@ def produto(page: ft.Page):
     page.overlay.append(dialog_produto)
     page.overlay.append(dialog_tipo)
     
-    page.update()
-   
-    def carregar_produtos(pagina_atual, itens_por_pagina):
-        produtos = controller.obter_item_nutricional()
-        inicio = (pagina_atual - 1) * itens_por_pagina
-        fim = inicio + itens_por_pagina
-        return produtos[inicio:fim]
-
-    def gerar_linhas_tabela(produtos):       
-        rows = []
-        for produto in produtos:
-            rows.append(
-                ft.DataRow(
-                    cells=[
-                        ft.DataCell(ft.Text(value=produto.codigo)),
-                        ft.DataCell(ft.Text(value=produto.corte)),
-                        ft.DataCell(ft.Text(value=produto.tipo_id)),
-                        ft.DataCell(ft.Text(value=produto.preco)),
-                        ft.DataCell(
-                            ft.Row(
-                                controls=[
-                                    ft.ElevatedButton(
-                                        text=".",
-                                        icon=ft.icons.EDIT,
-                                        width=50,
-                                        on_click=lambda e, p=produto.id: abrir_dialog_produto(e, p)
-                                    ),
-                                    ft.ElevatedButton(
-                                        text=".",
-                                        icon=ft.icons.DELETE,
-                                        width=50,
-                                        on_click=lambda e, p=produto.id: deletar_produto(e, p)
-                                    ),
-                                ],
-                                spacing=10,
-                            ),
-                        ),
-                    ]
-                )
-            )
-        return rows
-    
+    page.update()  
     def deletar_produto(e, produto_id):
         try:
             controller.excluir_item_nutricional(produto_id)
@@ -613,14 +645,7 @@ def produto(page: ft.Page):
             page.update()    
         
         
-    def atualizar_tabela(e):
-        produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
-        tabela.rows.clear()
-        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina))
-        paginacao_controls.controls[1].value = f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"
-        tabela.update()  # Atualiza a tabela dinamicamente
-        page.update()
-
+ 
     
     def salvar_novo_tipo(dialog):
         novo_tipo = novo_tipo_field.value
@@ -678,18 +703,7 @@ def produto(page: ft.Page):
         alignment=ft.MainAxisAlignment.CENTER
     )
 
-    tabela = ft.DataTable(
-        columns=[
-            ft.DataColumn(ft.Text(value="Código")),
-            ft.DataColumn(ft.Text(value="Corte")),
-            ft.DataColumn(ft.Text(value="Tipo")),
-            ft.DataColumn(ft.Text(value="Preço")),
-            ft.DataColumn(ft.Text(value="Ações")),
-        ],
-        # rows=[],
-        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina)),
-        expand=True
-    )
+    
     
     paginacao_controls = ft.Row(
         controls=[

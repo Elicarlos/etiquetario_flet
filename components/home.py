@@ -331,8 +331,7 @@ def home(page: ft.Page):
         ]
     )
     temperaturas = controller.obter_temperatura()
-    for t in temperaturas:
-        print(t.temperatura)
+    
     dropdown_temperatura = ft.Dropdown(
         label="Selecione a temperatura",
         hint_text="Selecione a temperatura",
