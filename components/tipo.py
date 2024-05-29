@@ -1,6 +1,6 @@
 import flet as ft
 from controllers import Controller
-from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro
+from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro, exibir_messagem_delete
 
 
 
@@ -148,11 +148,7 @@ def tipo(page: ft.Page):
         if (pagina_atual - 1) * itens_por_pagina >= total_tipos and pagina_atual > 1:
             pagina_atual -= 1
         atualizar_tabela(None)  # Atualiza a tabela para refletir a exclusão
-        page.snack_bar = ft.SnackBar(
-            content=ft.Text('Tipo deletado com sucesso!'),
-            bgcolor=ft.colors.RED
-        )
-        page.snack_bar.open = True
+        exibir_messagem_delete(page, 'Tipo excluído com sucesso!')
         page.update()
     
 

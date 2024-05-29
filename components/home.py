@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import win32print
 
-from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso
+from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso, exibir_messagem_delete
 
 def home(page: ft.Page):
     controller = Controller()
@@ -394,6 +394,8 @@ def home(page: ft.Page):
     sodio_field_100 = create_small_text_field()
     sodio_field_0 = create_small_text_field()
     sodio_field_vd = create_small_text_field()
+    
+    
     def salvar_novo_produto(e, produto_id=None):
         
         dados_produto = {
@@ -824,9 +826,7 @@ def home(page: ft.Page):
                     ]
                 )
             )
-        return rows
-    
-    
+        return rows   
 
     def atualizar_tabela(e):
         produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
@@ -897,7 +897,8 @@ def home(page: ft.Page):
             ft.DataColumn(ft.Text(value="Preço")),
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        rows=[],
+        # rows=[],
+        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina)),
         expand=True
     )
     

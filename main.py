@@ -182,7 +182,7 @@ def main(page: ft.Page):
         ),
         footer
     )
-
+    
     page.bgcolor = '#EDF1F4'
     show_only(home_container)
     page.update()

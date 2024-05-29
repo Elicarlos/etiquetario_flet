@@ -1,6 +1,6 @@
 import flet as ft
 from controllers import Controller
-from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro
+from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro, exibir_messagem_delete
 
 def temperatura(page: ft.Page):
     controller = Controller()
@@ -123,7 +123,7 @@ def temperatura(page: ft.Page):
         if (pagina_atual - 1) * itens_por_pagina >= total_temperatura and pagina_atual > 1:
             pagina_atual -= 1
         atualizar_tabela(None)  # Atualiza a tabela para refletir a exclusão
-        exibir_mensagem_sucesso(page, 'Temperatura deletada com sucesso!')
+        exibir_messagem_delete(page, 'Temperatura deletada com sucesso!')
 
     def atualizar_tabela(e):
         temperatura_pagina = carregar_temperatura(pagina_atual, itens_por_pagina)

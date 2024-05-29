@@ -1,6 +1,6 @@
 import flet as ft
 from controllers import Controller
-from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso
+from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso, exibir_messagem_delete
 
 def produto(page: ft.Page):
     controller = Controller()
@@ -592,11 +592,7 @@ def produto(page: ft.Page):
             if (pagina_atual - 1) * itens_por_pagina >= total_produtos and pagina_atual > 1:
                 pagina_atual -= 1
             atualizar_tabela(None)
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text('Produto excluído com sucesso!'),
-                bgcolor=ft.colors.GREEN
-            )
-            page.snack_bar.open = True
+            exibir_messagem_delete(page, "Produto excluído com sucesso!")
             page.update()
         except Exception as ex:
             page.snack_bar = ft.SnackBar(
@@ -680,7 +676,8 @@ def produto(page: ft.Page):
             ft.DataColumn(ft.Text(value="Preço")),
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        rows=[],
+        # rows=[],
+        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina)),
         expand=True
     )
     
