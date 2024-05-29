@@ -351,7 +351,7 @@ def produto(page: ft.Page):
         content=ft.Container(
             expand=True,
             width=960,
-            height=500,
+            height=700,
             margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
             content=ft.Column(
                 controls=[

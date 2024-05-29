@@ -145,20 +145,15 @@ def home(page: ft.Page):
         
         
     def imprimir(e):
-        conteudo = ""
+        fabricacao = fabricacao_field.value
+        vencimento = vencimento_field.value
+        temperatura = dropdown_temperatura.value
+        etiqueta = dropdown_etiquetas.value
         impressora = dropdown_impressoras.value
         quantidade = int(quantidade_impressao_textfield.value)
         
-        dados = {
-            'Conteudo': conteudo,
-            'Impressora': impressora,
-            'Quantidade': quantidade
-        }
-        print(dados)
-        
-        # if dados_produto:
-        #     id_produto = dados_produto
-        #     etiqueta_selecionada = 
+        conteudo = criar_etiqueta(id_produto, etiqueta)
+        imprimir_etiqueta(conteudo, impressora, quantidade)
     
     
     
@@ -291,7 +286,9 @@ def home(page: ft.Page):
         options=[ft.dropdown.Option(impressora) for impressora in impressoras_disponiveis],
         width=300
     )
-    quantidade_impressao_textfield = ft.TextField(label="Quantidade", )  
+    quantidade_impressao_textfield = ft.TextField(label="Quantidade")
+    fabricacao_field = ft.TextField(label="Fabricação")
+    vencimento_field  = ft.TextField(label="Vencimento")
     
     dialog_print = ft.AlertDialog(
         modal=True,
@@ -305,8 +302,8 @@ def home(page: ft.Page):
             margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
             content=ft.Column(
                 controls=[
-                    ft.TextField(label="Fabricação"),
-                    ft.TextField(label="Vencimento"),
+                    fabricacao_field,                    
+                    vencimento_field,                    
                     dropdown_temperatura,
                     dropdown_impressoras,
                     dropdown_etiquetas
@@ -539,7 +536,7 @@ def home(page: ft.Page):
             content=ft.Container(
                 expand=True,
                 width=960,
-                height=500,
+                height=700,
                 margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
                 content=ft.Column(
                     controls=[

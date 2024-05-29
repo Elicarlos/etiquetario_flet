@@ -16,6 +16,7 @@ def exibir_mensagem_erro(page, mensagem):
     page.snack_bar.open = True
     return snack
 
+
 def exibir_messagem_delete(page, mensagem):
     snack = page.snack_bar = ft.SnackBar(
         content=ft.Text(mensagem),

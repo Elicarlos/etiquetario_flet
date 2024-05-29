@@ -38,6 +38,10 @@ class CustomExpansionTile(ft.UserControl):
 
 def main(page: ft.Page):
     current_content = [None]
+    
+    page.window_maximized = True
+    page.window_min_width = 1280 
+    page.window_min_height = 720
 
     def exibir_mensagem_sucesso(mensagem):
         page.snack_bar = ft.SnackBar(
@@ -125,6 +129,7 @@ def main(page: ft.Page):
         title=ft.Text("W Carnes"),
     )
     
+    
     sidbar = ft.Column(
         width=240,
         controls=[
@@ -139,7 +144,7 @@ def main(page: ft.Page):
                 shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
                 controls=[                
                     ft.ListTile(title=ft.TextButton(text="Empresa", on_click=lambda _: [atualizar_empresa_container(), show_only(empresa_container)])),
-                    ft.ListTile(title=ft.TextButton(text="Produto", on_click=lambda _: [atualizar_produto_container(), show_only(produto_container)])),
+                    ft.ListTile(title=ft.TextButton(text="Corte", on_click=lambda _: [atualizar_produto_container(), show_only(produto_container)])),
                     ft.ListTile(title=ft.TextButton(text="Tipo", on_click=lambda _: [atualizar_tipo_container(), show_only(tipo_container)])),
                     ft.ListTile(title=ft.TextButton(text="Temperatura", on_click=lambda _: [atualizar_temperatura_container(), show_only(temperatura_container)])),
                 ],
