@@ -80,8 +80,7 @@ class Controller:
         return [tipo['tipo'] for tipo in tipos]
     
     @staticmethod
-    def obter_tipo():
-        
+    def obter_tipo():        
         return Tipo.select()
     
     
@@ -132,6 +131,7 @@ class Controller:
         #     print(item)
         return list(itens_nutricionais)
     
+    @staticmethod
     def obter_item_nutricional():
         return ItemNutricional.select()
     

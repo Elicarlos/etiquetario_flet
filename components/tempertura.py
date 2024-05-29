@@ -8,6 +8,11 @@ def temperatura(page: ft.Page):
     
     itens_por_pagina = 5
     pagina_atual = 1
+    
+    def limpar_campos():
+        nova_temperatura_field = ""
+        page.update()
+        
 
     def obter_total_temperatura():
         return len(controller.obter_temperatura())  # Supondo que temos uma função para obter o número total de temperaturas
@@ -142,6 +147,7 @@ def temperatura(page: ft.Page):
                     controller.salvar_temperatura(dados)  # Cria uma nova temperatura
                     mensagem = 'Temperatura adicionada com sucesso!'
                     exibir_mensagem_sucesso(page, mensagem)
+                    limpar_campos()
                     
             except Exception as erro:
                 mensagem = f'Erro ao salvar a temperatura: {str(erro)}'

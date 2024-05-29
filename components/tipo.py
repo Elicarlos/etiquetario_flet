@@ -7,6 +7,7 @@ from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro
 def tipo(page: ft.Page):
     controller = Controller()
     
+    
     success_color = ft.colors.GREEN
     error_color = ft.colors.RED
     
@@ -21,6 +22,11 @@ def tipo(page: ft.Page):
     #             bgcolor=bgcolor_message,                
     #         )
     #     page.snack_bar.open = True
+    
+    def limpar_campos():
+        novo_tipo_field = ""
+        page.update()
+        
 
     def obter_total_tipos():
         return len(controller.obter_tipo())  # Supondo que temos uma função para obter o número total de tipos
@@ -91,6 +97,7 @@ def tipo(page: ft.Page):
     )    
     
     page.overlay.append(dialog_tipo)
+    
     page.update()
     
     def carregar_tipos(pagina_atual, itens_por_pagina):
@@ -132,17 +139,6 @@ def tipo(page: ft.Page):
             )
         return rows
     
-    # def deletar_tipo(e, tipo_id):
-    #     controller.excluir_tipo(tipo_id)
-    #     nonlocal total_tipos
-    #     total_tipos = obter_total_tipos()  # Atualiza o total de tipos
-    #     atualizar_tabela(None)  # Atualiza a tabela para refletir a exclusão
-    #     page.snack_bar = ft.SnackBar(
-    #         content=ft.Text('Tipo deletado com sucesso!'),
-    #         bgcolor=ft.colors.RED
-    #     )
-    #     page.snack_bar.open = True
-    #     page.update()
     
     def deletar_tipo(e, tipo_id):
         controller.excluir_tipo(tipo_id)
@@ -181,6 +177,8 @@ def tipo(page: ft.Page):
                     controller.criar_tipo(novo_tipo)  # Cria um novo tipo
                     mensagem = 'Tipo adicionado com sucesso!'
                     exibir_mensagem_sucesso(page, mensagem)
+                    limpar_campos()
+                    
                     
             except Exception as erro:
                 mensagem = f'Erro ao salvar o tipo: {str(erro)}'

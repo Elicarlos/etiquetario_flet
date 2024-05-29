@@ -5,8 +5,92 @@ import os
 from pathlib import Path
 import win32print
 
+from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso
+
 def home(page: ft.Page):
-    controller = Controller()   
+    controller = Controller()
+    
+    itens_por_pagina = 5
+    pagina_atual = 1
+    
+    def limpar_campos():
+        codigo_field.value = ""
+        corte_field.value = ""
+        preco_field.value = ""
+        tipo_carne_dropdown.value = None
+        codigo_barras_field.value = ""
+        porcao_embalagem_field.value = ""
+        porcao_field.value = ""
+        adicional_field.value = ""
+        informacao_adicional_field.value = ""
+        valor_energico_field_100.value = ""
+        valor_energico_field_0.value = ""
+        valor_energico_field_vd.value = ""
+        carboidratos_totais_field_100.value = ""
+        carboidratos_totais_field_0.value = ""
+        carboidratos_totais_field_vd.value = ""
+        acucares_totais_field_100.value = ""
+        acucares_totais_field_0.value = ""
+        acucares_totais_field_vd.value = ""
+        acucares_adicionados_field_100.value = ""
+        acucares_adicionados_field_0.value = ""
+        acucares_adicionados_field_vd.value = ""
+        proteinas_field_100.value = ""
+        proteinas_field_0.value = ""
+        proteinas_field_vd.value = ""
+        gorduras_totais_field_100.value = ""
+        gorduras_totais_field_0.value = ""
+        gorduras_totais_field_vd.value = ""
+        gorduras_saturadas_field_100.value = ""
+        gorduras_saturadas_field_0.value = ""
+        gorduras_saturadas_field_vd.value = ""
+        gorduras_trans_field_100.value = ""
+        gorduras_trans_field_0.value = ""
+        gorduras_trans_field_vd.value = ""
+        fibra_field_100.value = ""
+        fibra_field_0.value = ""
+        fibra_field_vd.value = ""
+        sodio_field_100.value = ""
+        sodio_field_0.value = ""
+        sodio_field_vd.value = ""
+        page.update()
+        
+    def create_text_field(label=None, width=None, expand=False, multiline=False, height=None):
+        return ft.TextField(
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )
+        
+    def create_small_text_field(width=100):
+        return ft.TextField(
+            width=width,
+            expand=True,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.GREY_100,
+            color=ft.colors.BLUE,
+            hover_color=ft.colors.GREY_100,
+            border_width=1,
+            height=35,
+            content_padding=ft.padding.all(10),
+        )
+    
+    
+    
+    def obter_total_produtos():
+        return len(controller.obter_item_nutricional())  # Supondo que temos uma função para obter o número total de produtos
+    
+    total_produtos = obter_total_produtos()  
+    
+    print("Container Hpme", total_produtos) 
     
     def carregar_etiquetas():
         p = Path(__file__).parent
@@ -150,9 +234,7 @@ def home(page: ft.Page):
     tipo_carne_dropdown = ft.Dropdown(
         label="Tipo de Carne",
         border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        border_width=0,
+        border_width=1,
         options=[]
     )
 
@@ -257,493 +339,124 @@ def home(page: ft.Page):
     
     )
     
-    codigo_field = ft.TextField(label="Código")
+    codigo_field = create_text_field(label="Código", width=200)
     
-    corte_field = ft.TextField(label="Descrição")
+    corte_field = create_text_field(label="Descrição", expand=True)
     
-    preco_field = ft.TextField(label="Preço")
+    preco_field = create_text_field(label="Preço", width=200)
     
-    codigo_barras_field = ft.TextField(
-        label="Codigo de Barras",
-        width=150,
-        border_radius=ft.border_radius.all(3),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    codigo_barras_field = create_text_field(label="Código de Barras", width=200)   
     
-    porcao_embalagem_field = ft.TextField(
-        label="Porção por Embalagem",
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    porcao_embalagem_field = create_text_field(label="Porção por Embalagem", expand=True)
+        
+    porcao_field = create_text_field(label="Porção", expand=True)
     
-    porcao_field = ft.TextField(
-        label="Porção",
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
     
-    adicional_field = ft.TextField(
-        label="Campo Adicional",
-        multiline=True,
-        expand=True,
-        height=100,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
+    informacao_adicional_field = create_text_field(label="Informação Adicional", multiline=True, expand=True)
     
-    informacao_adicional_field = ft.TextField(
-        label="Campo Adicional",
-        multiline=True,
-        expand=True,
-        height=100,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=0,
-    )
-   
-    valor_energico_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10),
-    )
+    valor_energico_field_100 = create_small_text_field()
+    valor_energico_field_0 = create_small_text_field()
+    valor_energico_field_vd = create_small_text_field()
     
-    valor_energico_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    carboidratos_totais_field_100 = create_small_text_field()
+    carboidratos_totais_field_0 = create_small_text_field()
+    carboidratos_totais_field_vd = create_small_text_field()
     
-    valor_energico_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_totais_field_100 = create_small_text_field()
+    acucares_totais_field_0 = create_small_text_field()
+    acucares_totais_field_vd = create_small_text_field()
     
-    carboidratos_totais_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    acucares_adicionados_field_100 = create_small_text_field()
+    acucares_adicionados_field_0 = create_small_text_field()
+    acucares_adicionados_field_vd = create_small_text_field()
     
-    carboidratos_totais_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    proteinas_field_100 = create_small_text_field()
+    proteinas_field_0 = create_small_text_field()
+    proteinas_field_vd = create_small_text_field()
     
-    carboidratos_totais_field_vd =ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_totais_field_100 = create_small_text_field()
+    gorduras_totais_field_0 = create_small_text_field()
+    gorduras_totais_field_vd = create_small_text_field()
     
-    acucares_totais_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    acucares_totais_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    acucares_totais_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    acucares_adicionados_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    acucares_adicionados_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    acucares_adicionados_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    proteinas_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    proteinas_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    proteinas_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_totais_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_totais_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_totais_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_saturadas_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_saturadas_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_saturadas_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_saturadas_field_100 = create_small_text_field()
+    gorduras_saturadas_field_0 = create_small_text_field()
+    gorduras_saturadas_field_vd = create_small_text_field()
 
-    gorduras_trans_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_trans_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    gorduras_trans_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    gorduras_trans_field_100 = create_small_text_field()
+    gorduras_trans_field_0 = create_small_text_field()
+    gorduras_trans_field_vd = create_small_text_field()
    
-    fibra_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
+    fibra_field_100 = create_small_text_field()
+    fibra_field_0 = create_small_text_field()
+    fibra_field_vd = create_small_text_field()
     
-    fibra_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    fibra_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    sodio_field_100 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    sodio_field_0 = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
-    
-    sodio_field_vd = ft.TextField(
-        width=100,
-        expand=True,
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        hover_color=ft.colors.GREY_100,
-        border_width=1,
-        height=35,
-        content_padding=ft.padding.all(10)
-    )
- 
+    sodio_field_100 = create_small_text_field()
+    sodio_field_0 = create_small_text_field()
+    sodio_field_vd = create_small_text_field()
     def salvar_novo_produto(e, produto_id=None):
         
+        dados_produto = {
+            'codigo': codigo_field.value,
+            'corte': corte_field.value,
+            'tipo': tipo_carne_dropdown.value,  # Supondo que tipo_carne_dropdown contém o ID do tipo
+            'preco': preco_field.value,
+            'codigo_barras': codigo_barras_field.value,
+            'porcao_embalagem': porcao_embalagem_field.value,
+            'porcao': porcao_field.value,
+            'campo_adicional': adicional_field.value,
+            'informacoes_adicionais': informacao_adicional_field.value,
+            'valor_energetico_100g': valor_energico_field_100.value,
+            'valor_energetico_porcao': valor_energico_field_0.value,
+            'valor_energetico_vd': valor_energico_field_vd.value,
+            'carboidratos_totais_100g': carboidratos_totais_field_100.value,
+            'carboidratos_totais_porcao': carboidratos_totais_field_0.value,
+            'carboidratos_totais_vd': carboidratos_totais_field_vd.value,
+            'acucares_totais_100g': acucares_totais_field_100.value,
+            'acucares_totais_porcao': acucares_totais_field_0.value,
+            'acucares_totais_vd': acucares_totais_field_vd.value,
+            'acucares_adicionados_100g': acucares_adicionados_field_100.value,
+            'acucares_adicionados_porcao': acucares_adicionados_field_0.value,
+            'acucares_adicionados_vd': acucares_adicionados_field_vd.value,
+            'proteinas_100g': proteinas_field_100.value,
+            'proteinas_porcao': proteinas_field_0.value,
+            'proteinas_vd': proteinas_field_vd.value,
+            'gorduras_totais_100g': gorduras_totais_field_100.value,
+            'gorduras_totais_porcao': gorduras_totais_field_0.value,
+            'gorduras_totais_vd': gorduras_totais_field_vd.value,
+            'gorduras_saturadas_100g': gorduras_saturadas_field_100.value,
+            'gorduras_saturadas_porcao': gorduras_saturadas_field_0.value,
+            'gorduras_saturadas_vd': gorduras_saturadas_field_vd.value,
+            'gorduras_trans_100g': gorduras_trans_field_100.value,
+            'gorduras_trans_porcao': gorduras_trans_field_0.value,
+            'gorduras_trans_vd': gorduras_trans_field_vd.value,
+            'fibra_alimentar_100g': fibra_field_100.value,
+            'fibra_alimentar_porcao': fibra_field_0.value,
+            'fibra_alimentar_vd': fibra_field_vd.value,
+            'sodio_100g': sodio_field_100.value,
+            'sodio_porcao': sodio_field_0.value,
+            'sodio_vd': sodio_field_vd.value
+        }
         try:
-            dados_produto = {
-                'codigo': codigo_field.value,
-                'corte': corte_field.value,
-                'tipo': tipo_carne_dropdown.value,  # Supondo que tipo_carne_dropdown contém o ID do tipo
-                'preco': preco_field.value,
-                'codigo_barras': codigo_barras_field.value,
-                'porcao_embalagem': porcao_embalagem_field.value,
-                'porcao': porcao_field.value,
-                'campo_adicional': adicional_field.value,
-                'informacoes_adicionais':informacao_adicional_field.value,
-                'valor_energetico_100g': valor_energico_field_100.value,
-                'valor_energetico_porcao': valor_energico_field_0.value,
-                'valor_energetico_vd': valor_energico_field_vd.value,
-                'carboidratos_totais_100g': carboidratos_totais_field_100.value,
-                'carboidratos_totais_porcao': carboidratos_totais_field_0.value,
-                'carboidratos_totais_vd': carboidratos_totais_field_vd.value,
-                'acucares_totais_100g': acucares_totais_field_100.value,
-                'acucares_totais_porcao': acucares_totais_field_0.value,
-                'acucares_totais_vd': acucares_totais_field_vd.value,
-                'acucares_adicionados_100g': acucares_adicionados_field_100.value,
-                'acucares_adicionados_porcao': acucares_adicionados_field_0.value,
-                'acucares_adicionados_vd': acucares_adicionados_field_vd.value,
-                'proteinas_100g': proteinas_field_100.value,
-                'proteinas_porcao': proteinas_field_0.value,
-                'proteinas_vd': proteinas_field_vd.value,
-                'gorduras_totais_100g': gorduras_totais_field_100.value,
-                'gorduras_totais_porcao': gorduras_totais_field_0.value,
-                'gorduras_totais_vd': gorduras_totais_field_vd.value,
-                'gorduras_saturadas_100g': gorduras_saturadas_field_100.value,
-                'gorduras_saturadas_porcao': gorduras_saturadas_field_0.value,
-                'gorduras_saturadas_vd': gorduras_saturadas_field_vd.value,
-                'gorduras_trans_100g': gorduras_saturadas_field_100.value,
-                'gorduras_trans_porcao': gorduras_saturadas_field_0.value,
-                'gorduras_trans_vd': gorduras_saturadas_field_vd.value,
-                'fibra_alimentar_100g': fibra_field_100.value,
-                'fibra_alimentar_porcao': fibra_field_0.value,
-                'fibra_alimentar_vd': fibra_field_vd.value,
-                'sodio_100g': sodio_field_100.value,
-                'sodio_porcao': sodio_field_0.value,
-                'sodio_vd': sodio_field_vd.value            }
 
-            # if produto_id:  # Se existe um ID, atualiza o produto
-            #     controller.atualizar_produto(produto_id, dados_produto)
-            # else:  # Senão, cria um novo produto
             if produto_id:  # Se existe um ID, atualiza o produto
                 controller.atualizar_item_nutricional(produto_id, dados_produto)
+                mensagem = 'Produto atualizado com sucesso!'
             else:  # Senão, cria um novo produto
                 controller.salvar_produto(dados_produto)
-
-            fechar_dialog_produto(None)
-            atualizar_tabela(None)
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text('Produto salvo com sucesso!'),
-                bgcolor=ft.colors.GREEN
-            )
-            page.snack_bar.open = True
-            page.update()
-        except Exception as ex:
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text(f'Erro ao salvar produto: {str(ex)}'),
-                bgcolor=ft.colors.RED
-            )
-            page.snack_bar.open = True
-            page.update()
+                mensagem = 'Produto adicionado com sucesso!'
+            
+            exibir_mensagem_sucesso(page, mensagem)
+            limpar_campos()                       
+        except Exception as erro:
+            mensagem = f'Erro ao salvar o produto: {str(erro)}'
+            exibir_mensagem_erro(page, mensagem)
+        
+        fechar_dialog_produto(e)   
+        nonlocal total_produtos
+        total_produtos = obter_total_produtos()
+        atualizar_tabela(None)
+        page.update()
    
     def editar_produto(e, produto_id):
         produto = controller.obter_item_nutricional_por_id(produto_id)
@@ -1078,20 +791,22 @@ def home(page: ft.Page):
     
     page.update()
     
-    # def adicionar_produto(e):
-    #     abrir_dialog_produto()
+    def carregar_produtos(pagina_atual, itens_por_pagina):
+        produtos = controller.obter_item_nutricional()
+        inicio = (pagina_atual - 1) * itens_por_pagina
+        fim = inicio + itens_por_pagina
+        return produtos[inicio:fim]
 
-    def carregar_produtos():
-        produtos = controller.obter_itens_nutricionais()
+    def gerar_linhas_tabela(produtos):        
         rows = []
         for produto in produtos:
             rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(value=produto['codigo'])),  # Uso de chaves para acessar valores do dicionário
-                        ft.DataCell(ft.Text(value=produto['corte'])),
-                        ft.DataCell(ft.Text(value=produto['tipo'])),
-                        ft.DataCell(ft.Text(value=produto['preco'])),
+                        ft.DataCell(ft.Text(value=produto.codigo)),
+                        ft.DataCell(ft.Text(value=produto.corte)),
+                        ft.DataCell(ft.Text(value=produto.tipo_id)),
+                        ft.DataCell(ft.Text(value=produto.preco)),
                         ft.DataCell(
                             ft.Row(
                                 controls=[                                   
@@ -1110,10 +825,15 @@ def home(page: ft.Page):
                 )
             )
         return rows
+    
+    
 
     def atualizar_tabela(e):
+        produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
         tabela.rows.clear()
-        tabela.rows.extend(carregar_produtos())
+        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina))
+        paginacao_controls.controls[1].value = f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"
+        tabela.update()  # Atualiza a tabela dinamicamente
         page.update()
     
 
@@ -1129,6 +849,18 @@ def home(page: ft.Page):
             )
             page.snack_bar.open = True
             page.update()
+            
+    def proxima_pagina(e):
+        nonlocal pagina_atual
+        if pagina_atual * itens_por_pagina < total_produtos:
+            pagina_atual += 1
+            atualizar_tabela(e)
+
+    def pagina_anterior(e):
+        nonlocal pagina_atual
+        if pagina_atual > 1:
+            pagina_atual -= 1
+            atualizar_tabela(e)
 
     def atualizar_dropdown_tipo(selecionar_ultimo=False):
         tipos = controller.obter_tipo()  # Função que obtém a lista de tipos do banco de dados
@@ -1165,9 +897,19 @@ def home(page: ft.Page):
             ft.DataColumn(ft.Text(value="Preço")),
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        rows=carregar_produtos(),
+        rows=[],
         expand=True
     )
+    
+    paginacao_controls = ft.Row(
+        controls=[
+            ft.IconButton(icon=ft.icons.CHEVRON_LEFT, on_click=pagina_anterior),
+            ft.Text(value=f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"),
+            ft.IconButton(icon=ft.icons.CHEVRON_RIGHT, on_click=proxima_pagina)
+        ],
+        alignment=ft.MainAxisAlignment.CENTER
+    )
+
 
     return ft.Column(
         controls=[
@@ -1196,7 +938,8 @@ def home(page: ft.Page):
                         ft.Row(
                             controls=[tabela],
                             alignment=ft.MainAxisAlignment.CENTER
-                        )
+                        ),
+                        paginacao_controls
                     ],
                     expand=True
                 ),

@@ -1,16 +1,71 @@
 import flet as ft
 from controllers import Controller
+from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso
 
 def produto(page: ft.Page):
     controller = Controller()
     
-   
+    produto_atual = None
     
+    itens_por_pagina = 5
+    pagina_atual = 1
+    
+    
+
+    def limpar_campos():
+        codigo_field.value = ""
+        corte_field.value = ""
+        preco_field.value = ""
+        tipo_carne_dropdown.value = None
+        codigo_barras_field.value = ""
+        porcao_embalagem_field.value = ""
+        porcao_field.value = ""
+        adicional_field.value = ""
+        informacao_adicional_field.value = ""
+        valor_energico_field_100.value = ""
+        valor_energico_field_0.value = ""
+        valor_energico_field_vd.value = ""
+        carboidratos_totais_field_100.value = ""
+        carboidratos_totais_field_0.value = ""
+        carboidratos_totais_field_vd.value = ""
+        acucares_totais_field_100.value = ""
+        acucares_totais_field_0.value = ""
+        acucares_totais_field_vd.value = ""
+        acucares_adicionados_field_100.value = ""
+        acucares_adicionados_field_0.value = ""
+        acucares_adicionados_field_vd.value = ""
+        proteinas_field_100.value = ""
+        proteinas_field_0.value = ""
+        proteinas_field_vd.value = ""
+        gorduras_totais_field_100.value = ""
+        gorduras_totais_field_0.value = ""
+        gorduras_totais_field_vd.value = ""
+        gorduras_saturadas_field_100.value = ""
+        gorduras_saturadas_field_0.value = ""
+        gorduras_saturadas_field_vd.value = ""
+        gorduras_trans_field_100.value = ""
+        gorduras_trans_field_0.value = ""
+        gorduras_trans_field_vd.value = ""
+        fibra_field_100.value = ""
+        fibra_field_0.value = ""
+        fibra_field_vd.value = ""
+        sodio_field_100.value = ""
+        sodio_field_0.value = ""
+        sodio_field_vd.value = ""
+        page.update()
+    
+    
+    
+    def obter_total_produtos():
+        return len(controller.obter_item_nutricional())  # Supondo que temos uma função para obter o número total de produtos
+    
+    total_produtos = obter_total_produtos()
+    print("Container Produto", total_produtos) 
+
     def abrir_dialog_produto(e, produto_id=None):
         if produto_id:
             editar_produto(e, produto_id)
         else:
-            
             atualizar_dropdown_tipo(selecionar_ultimo=True)
             dialog_produto.open = True
             page.update()
@@ -43,7 +98,6 @@ def produto(page: ft.Page):
             content_padding=ft.padding.all(10),
         )
 
-
     def fechar_dialog_produto(e):
         dialog_produto.open = False
         page.update()
@@ -56,13 +110,6 @@ def produto(page: ft.Page):
         dialog_tipo.open = False
         page.update()
         abrir_dialog_produto(e)
-        
-    # def adicionar_tipo(e):
-    #     print(e)
-    #     # Esta função é chamada quando o botão "Adicionar Produto" é clicado
-    #     abrir_dialog_tipo()
-    
-     
     
     search_input = ft.TextField(
         hint_text="Busque por código, código de barras ou nome do produto...",
@@ -113,7 +160,7 @@ def produto(page: ft.Page):
     
     codigo_field = create_text_field(label="Código", width=200)
     
-    corte_field = create_text_field(label="Descrição",expand=True)
+    corte_field = create_text_field(label="Descrição", expand=True)
     
     preco_field = create_text_field(label="Preço", width=200)
     
@@ -125,162 +172,115 @@ def produto(page: ft.Page):
     
     adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
     
-    informacao_adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
- 
- 
+    informacao_adicional_field = create_text_field(label="Informação Adicional", multiline=True, expand=True)
     
     valor_energico_field_100 = create_small_text_field()
-    
     valor_energico_field_0 = create_small_text_field()
-       
-    
     valor_energico_field_vd = create_small_text_field()
     
     carboidratos_totais_field_100 = create_small_text_field()
-    
     carboidratos_totais_field_0 = create_small_text_field()
-    
     carboidratos_totais_field_vd = create_small_text_field()
     
     acucares_totais_field_100 = create_small_text_field()
-    
     acucares_totais_field_0 = create_small_text_field()
-    
     acucares_totais_field_vd = create_small_text_field()
     
     acucares_adicionados_field_100 = create_small_text_field()
-    
     acucares_adicionados_field_0 = create_small_text_field()
-    
     acucares_adicionados_field_vd = create_small_text_field()
     
     proteinas_field_100 = create_small_text_field()
-    
     proteinas_field_0 = create_small_text_field()
-    
     proteinas_field_vd = create_small_text_field()
     
     gorduras_totais_field_100 = create_small_text_field()
-    
     gorduras_totais_field_0 = create_small_text_field()
-    
     gorduras_totais_field_vd = create_small_text_field()
     
     gorduras_saturadas_field_100 = create_small_text_field()
-    
     gorduras_saturadas_field_0 = create_small_text_field()
-    
     gorduras_saturadas_field_vd = create_small_text_field()
 
     gorduras_trans_field_100 = create_small_text_field()
-    
     gorduras_trans_field_0 = create_small_text_field()
-    
     gorduras_trans_field_vd = create_small_text_field()
    
     fibra_field_100 = create_small_text_field()
-    
     fibra_field_0 = create_small_text_field()
-    
     fibra_field_vd = create_small_text_field()
     
     sodio_field_100 = create_small_text_field()
-    
     sodio_field_0 = create_small_text_field()
-    
     sodio_field_vd = create_small_text_field()
  
     def salvar_novo_produto(e, produto_id=None):
         
+        dados_produto = {
+            'codigo': codigo_field.value,
+            'corte': corte_field.value,
+            'tipo': tipo_carne_dropdown.value,  # Supondo que tipo_carne_dropdown contém o ID do tipo
+            'preco': preco_field.value,
+            'codigo_barras': codigo_barras_field.value,
+            'porcao_embalagem': porcao_embalagem_field.value,
+            'porcao': porcao_field.value,
+            'campo_adicional': adicional_field.value,
+            'informacoes_adicionais': informacao_adicional_field.value,
+            'valor_energetico_100g': valor_energico_field_100.value,
+            'valor_energetico_porcao': valor_energico_field_0.value,
+            'valor_energetico_vd': valor_energico_field_vd.value,
+            'carboidratos_totais_100g': carboidratos_totais_field_100.value,
+            'carboidratos_totais_porcao': carboidratos_totais_field_0.value,
+            'carboidratos_totais_vd': carboidratos_totais_field_vd.value,
+            'acucares_totais_100g': acucares_totais_field_100.value,
+            'acucares_totais_porcao': acucares_totais_field_0.value,
+            'acucares_totais_vd': acucares_totais_field_vd.value,
+            'acucares_adicionados_100g': acucares_adicionados_field_100.value,
+            'acucares_adicionados_porcao': acucares_adicionados_field_0.value,
+            'acucares_adicionados_vd': acucares_adicionados_field_vd.value,
+            'proteinas_100g': proteinas_field_100.value,
+            'proteinas_porcao': proteinas_field_0.value,
+            'proteinas_vd': proteinas_field_vd.value,
+            'gorduras_totais_100g': gorduras_totais_field_100.value,
+            'gorduras_totais_porcao': gorduras_totais_field_0.value,
+            'gorduras_totais_vd': gorduras_totais_field_vd.value,
+            'gorduras_saturadas_100g': gorduras_saturadas_field_100.value,
+            'gorduras_saturadas_porcao': gorduras_saturadas_field_0.value,
+            'gorduras_saturadas_vd': gorduras_saturadas_field_vd.value,
+            'gorduras_trans_100g': gorduras_trans_field_100.value,
+            'gorduras_trans_porcao': gorduras_trans_field_0.value,
+            'gorduras_trans_vd': gorduras_trans_field_vd.value,
+            'fibra_alimentar_100g': fibra_field_100.value,
+            'fibra_alimentar_porcao': fibra_field_0.value,
+            'fibra_alimentar_vd': fibra_field_vd.value,
+            'sodio_100g': sodio_field_100.value,
+            'sodio_porcao': sodio_field_0.value,
+            'sodio_vd': sodio_field_vd.value
+        }
         try:
-            dados_produto = {
-                'codigo': codigo_field.value,
-                'corte': corte_field.value,
-                'tipo': tipo_carne_dropdown.value,  # Supondo que tipo_carne_dropdown contém o ID do tipo
-                'preco': preco_field.value,
-                'codigo_barras': codigo_barras_field.value,
-                'porcao_embalagem': porcao_embalagem_field.value,
-                'porcao': porcao_field.value,
-                'campo_adicional': adicional_field.value,
-                'informacoes_adicionais':informacao_adicional_field.value,
-                'valor_energetico_100g': valor_energico_field_100.value,
-                'valor_energetico_porcao': valor_energico_field_0.value,
-                'valor_energetico_vd': valor_energico_field_vd.value,
-                'carboidratos_totais_100g': carboidratos_totais_field_100.value,
-                'carboidratos_totais_porcao': carboidratos_totais_field_0.value,
-                'carboidratos_totais_vd': carboidratos_totais_field_vd.value,
-                'acucares_totais_100g': acucares_totais_field_100.value,
-                'acucares_totais_porcao': acucares_totais_field_0.value,
-                'acucares_totais_vd': acucares_totais_field_vd.value,
-                'acucares_adicionados_100g': acucares_adicionados_field_100.value,
-                'acucares_adicionados_porcao': acucares_adicionados_field_0.value,
-                'acucares_adicionados_vd': acucares_adicionados_field_vd.value,
-                'proteinas_100g': proteinas_field_100.value,
-                'proteinas_porcao': proteinas_field_0.value,
-                'proteinas_vd': proteinas_field_vd.value,
-                'gorduras_totais_100g': gorduras_totais_field_100.value,
-                'gorduras_totais_porcao': gorduras_totais_field_0.value,
-                'gorduras_totais_vd': gorduras_totais_field_vd.value,
-                'gorduras_saturadas_100g': gorduras_saturadas_field_100.value,
-                'gorduras_saturadas_porcao': gorduras_saturadas_field_0.value,
-                'gorduras_saturadas_vd': gorduras_saturadas_field_vd.value,
-                'gorduras_trans_100g': gorduras_saturadas_field_100.value,
-                'gorduras_trans_porcao': gorduras_saturadas_field_0.value,
-                'gorduras_trans_vd': gorduras_saturadas_field_vd.value,
-                'fibra_alimentar_100g': fibra_field_100.value,
-                'fibra_alimentar_porcao': fibra_field_0.value,
-                'fibra_alimentar_vd': fibra_field_vd.value,
-                'sodio_100g': sodio_field_100.value,
-                'sodio_porcao': sodio_field_0.value,
-                'sodio_vd': sodio_field_vd.value            }
 
-            # if produto_id:  # Se existe um ID, atualiza o produto
-            #     controller.atualizar_produto(produto_id, dados_produto)
-            # else:  # Senão, cria um novo produto
             if produto_id:  # Se existe um ID, atualiza o produto
                 controller.atualizar_item_nutricional(produto_id, dados_produto)
+                mensagem = 'Produto atualizado com sucesso!'
             else:  # Senão, cria um novo produto
                 controller.salvar_produto(dados_produto)
-
-            fechar_dialog_produto(None)
-            atualizar_tabela(None)
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text('Produto salvo com sucesso!'),
-                bgcolor=ft.colors.GREEN
-            )
-            page.snack_bar.open = True
-            page.update()
-        except Exception as ex:
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text(f'Erro ao salvar produto: {str(ex)}'),
-                bgcolor=ft.colors.RED
-            )
-            page.snack_bar.open = True
-            page.update()
-
-
-    def deletar_produto(e, produto_id):
-        try:
-            controller.excluir_item_nutricional(produto_id)
-            atualizar_tabela(None)
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text('Produto excluído com sucesso!'),
-                bgcolor=ft.colors.GREEN
-            )
-            page.snack_bar.open = True
-            page.update()
-        except Exception as ex:
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text(f'Erro ao excluir produto: {str(ex)}'),
-                bgcolor=ft.colors.RED
-            )
-            page.snack_bar.open = True
-            page.update()
+                mensagem = 'Produto adicionado com sucesso!'
+            
+            exibir_mensagem_sucesso(page, mensagem)
+            limpar_campos()                       
+        except Exception as erro:
+            mensagem = f'Erro ao salvar o produto: {str(erro)}'
+            exibir_mensagem_erro(page, mensagem)
         
+        fechar_dialog_produto(e)   
+        nonlocal total_produtos
+        total_produtos = obter_total_produtos()
+        atualizar_tabela(None)
+        page.update()
+
     def editar_produto(e, produto_id):
         produto = controller.obter_item_nutricional_por_id(produto_id)
         if produto:
-   
             # Configurações básicas do produto
             codigo_field.value = produto.codigo
             corte_field.value = produto.corte
@@ -333,7 +333,6 @@ def produto(page: ft.Page):
             sodio_field_0.value = str(produto.sodio_porcao)
             sodio_field_vd.value = str(produto.sodio_vd)
 
-           
             atualizar_dropdown_tipo()
 
             # Certifique-se de que o tipo_id corresponde a uma opção no dropdown
@@ -344,281 +343,222 @@ def produto(page: ft.Page):
             dialog_produto.open = True
             page.update()
 
-
-   
     dialog_produto = ft.AlertDialog(
-            modal=True,
-            title=ft.Text(value="Cadastro de Produto"),
-            elevation=0,
-            shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
-            content=ft.Container(
-                expand=True,
-                width=960,
-                height=500,
-                margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
-                content=ft.Column(
-                    controls=[
-                        ft.Tabs(
-                            scrollable=True,
-                            tabs=[
-                                ft.Tab(
-                                    text="Produto",
-                                    content=ft.Container(
-                                        margin=ft.margin.Margin(left=0, top=30, right=0, bottom=30),
-                                        content=ft.Column(
-                                            controls=[
-                                                ft.Row(
-                                                    spacing=15,
-                                                    controls=[
-                                                        tipo_carne_dropdown,
-                                                        ft.ElevatedButton(
-                                                            text="Tipo",
-                                                            icon=ft.icons.ADD,
-                                                            on_click= abrir_dialog_tipo,
-                                                            style=ft.ButtonStyle(
-                                                                shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
-                                                                bgcolor=ft.colors.BLUE,
-                                                                color=ft.colors.WHITE
-                                                            )
+        modal=True,
+        title=ft.Text(value="Cadastro de Produto"),
+        elevation=0,
+        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+        content=ft.Container(
+            expand=True,
+            width=960,
+            height=500,
+            margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
+            content=ft.Column(
+                controls=[
+                    ft.Tabs(
+                        scrollable=True,
+                        tabs=[
+                            ft.Tab(
+                                text="Produto",
+                                content=ft.Container(
+                                    margin=ft.margin.Margin(left=0, top=30, right=0, bottom=30),
+                                    content=ft.Column(
+                                        controls=[
+                                            ft.Row(
+                                                spacing=15,
+                                                controls=[
+                                                    tipo_carne_dropdown,
+                                                    ft.ElevatedButton(
+                                                        text="Tipo",
+                                                        icon=ft.icons.ADD,
+                                                        on_click=abrir_dialog_tipo,
+                                                        style=ft.ButtonStyle(
+                                                            shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+                                                            bgcolor=ft.colors.BLUE,
+                                                            color=ft.colors.WHITE
                                                         )
-                                                    ]
-                                                ),
-                                                ft.Row(
-                                                    controls=[
-                                                        codigo_field,
-                                                        corte_field,
-                                                        preco_field
-                                                    ]
-                                                ),
-                                                ft.Row(
-                                                    controls=[
-                                                        codigo_barras_field,
-                                                        porcao_embalagem_field,
-                                                        porcao_field,                                                        
-                                                    ]
-                                                ),
-                                                ft.Row(
-                                                    controls =[
-                                                        adicional_field
-                                                    ]
-                                                ),
-                                                ft.Row(
-                                                    controls=[
-                                                        informacao_adicional_field
-                                                    ]
-                                                )
-                                                                        
-                                                
-                                            ]
-                                        )
-                                    )
-                                ),
-                                ft.Tab(
-                                    text="Nutricional",
-                                    content=ft.Container(
-                                        expand=True,
-                                        margin=ft.margin.Margin(left=0, top=5, right=0, bottom=0),
-                                        content=ft.Column(
-                                            controls=[
-                                                ft.DataTable(
-                                                    column_spacing=100,
-                                                    divider_thickness=0,
-                                                    width=960,
-                                                    data_row_max_height=41,
-                                                    columns=[
-                                                        ft.DataColumn(ft.Text(value="", expand=True)),
-                                                        ft.DataColumn(ft.Text(value="100 g", width=100, text_align=ft.TextAlign.CENTER)),
-                                                        ft.DataColumn(ft.Text(value="000 g", width=100, text_align=ft.TextAlign.CENTER)),
-                                                        ft.DataColumn(ft.Text(value="%VD*", width=100, text_align=ft.TextAlign.CENTER)),
-                                                    ],
-                                                    rows=[
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Valor energético (kcal)")),
-                                                                ft.DataCell(
-                                                                    valor_energico_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    valor_energico_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    valor_energico_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Carboidratos totais (g)")),
-                                                                ft.DataCell(
-                                                                    carboidratos_totais_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    carboidratos_totais_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    carboidratos_totais_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Açúcares totais (g)")),
-                                                                ft.DataCell(
-                                                                    acucares_totais_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    acucares_totais_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    acucares_totais_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Açúcares adicionados (g)")),
-                                                                ft.DataCell(
-                                                                    acucares_adicionados_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    acucares_adicionados_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    acucares_adicionados_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Proteínas (g)")),
-                                                                ft.DataCell(
-                                                                    proteinas_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    proteinas_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    proteinas_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Gorduras totais (g)")),
-                                                                ft.DataCell(
-                                                                    gorduras_totais_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    gorduras_totais_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    gorduras_totais_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Gorduras saturadas (g)")),
-                                                                ft.DataCell(
-                                                                    gorduras_saturadas_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    gorduras_saturadas_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    gorduras_saturadas_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Gorduras Trans (g)")),
-                                                                ft.DataCell(
-                                                                    gorduras_trans_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    gorduras_trans_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    gorduras_trans_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Fibra alimentar (g)")),
-                                                                ft.DataCell(
-                                                                    fibra_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    fibra_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    fibra_field_vd
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        ft.DataRow(
-                                                            cells=[
-                                                                ft.DataCell(ft.Text(value="Sódio (mg)")),
-                                                                ft.DataCell(
-                                                                    sodio_field_100
-                                                                ),
-                                                                ft.DataCell(
-                                                                    sodio_field_0
-                                                                ),
-                                                                ft.DataCell(
-                                                                    sodio_field_vd
-                                                                ),
-                                                            ],
-                                                        ),
-                                                    ],
-                                                    expand=1
-                                                )
-                                            ],
-                                            expand=1
-                                        )
+                                                    )
+                                                ]
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    codigo_field,
+                                                    corte_field,
+                                                    preco_field
+                                                ]
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    codigo_barras_field,
+                                                    porcao_embalagem_field,
+                                                    porcao_field,                                                        
+                                                ]
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    adicional_field
+                                                ]
+                                            ),
+                                            ft.Row(
+                                                controls=[
+                                                    informacao_adicional_field
+                                                ]
+                                            )
+                                        ]
                                     )
                                 )
-                            ],
-                            expand=1
-                        )
-                    ],
-                    expand=1
-                )
-            ),
-            actions=[
-                ft.TextButton("Fechar", on_click=fechar_dialog_produto),
-                ft.ElevatedButton(
-                    text="Salvar",
-                    style=ft.ButtonStyle(
-                        shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
-                        bgcolor=ft.colors.BLUE,
-                        color=ft.colors.WHITE
-                    ),
-                    on_click=salvar_novo_produto
+                            ),
+                            ft.Tab(
+                                text="Nutricional",
+                                content=ft.Container(
+                                    expand=True,
+                                    margin=ft.margin.Margin(left=0, top=5, right=0, bottom=0),
+                                    content=ft.Column(
+                                        controls=[
+                                            ft.DataTable(
+                                                column_spacing=100,
+                                                divider_thickness=0,
+                                                width=960,
+                                                data_row_max_height=41,
+                                                columns=[
+                                                    ft.DataColumn(ft.Text(value="", expand=True)),
+                                                    ft.DataColumn(ft.Text(value="100 g", width=100, text_align=ft.TextAlign.CENTER)),
+                                                    ft.DataColumn(ft.Text(value="000 g", width=100, text_align=ft.TextAlign.CENTER)),
+                                                    ft.DataColumn(ft.Text(value="%VD*", width=100, text_align=ft.TextAlign.CENTER)),
+                                                ],
+                                                rows=[
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Valor energético (kcal)")),
+                                                            ft.DataCell(valor_energico_field_100),
+                                                            ft.DataCell(valor_energico_field_0),
+                                                            ft.DataCell(valor_energico_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Carboidratos totais (g)")),
+                                                            ft.DataCell(carboidratos_totais_field_100),
+                                                            ft.DataCell(carboidratos_totais_field_0),
+                                                            ft.DataCell(carboidratos_totais_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Açúcares totais (g)")),
+                                                            ft.DataCell(acucares_totais_field_100),
+                                                            ft.DataCell(acucares_totais_field_0),
+                                                            ft.DataCell(acucares_totais_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Açúcares adicionados (g)")),
+                                                            ft.DataCell(acucares_adicionados_field_100),
+                                                            ft.DataCell(acucares_adicionados_field_0),
+                                                            ft.DataCell(acucares_adicionados_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Proteínas (g)")),
+                                                            ft.DataCell(proteinas_field_100),
+                                                            ft.DataCell(proteinas_field_0),
+                                                            ft.DataCell(proteinas_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Gorduras totais (g)")),
+                                                            ft.DataCell(gorduras_totais_field_100),
+                                                            ft.DataCell(gorduras_totais_field_0),
+                                                            ft.DataCell(gorduras_totais_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Gorduras saturadas (g)")),
+                                                            ft.DataCell(gorduras_saturadas_field_100),
+                                                            ft.DataCell(gorduras_saturadas_field_0),
+                                                            ft.DataCell(gorduras_saturadas_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Gorduras Trans (g)")),
+                                                            ft.DataCell(gorduras_trans_field_100),
+                                                            ft.DataCell(gorduras_trans_field_0),
+                                                            ft.DataCell(gorduras_trans_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Fibra alimentar (g)")),
+                                                            ft.DataCell(fibra_field_100),
+                                                            ft.DataCell(fibra_field_0),
+                                                            ft.DataCell(fibra_field_vd),
+                                                        ]
+                                                    ),
+                                                    ft.DataRow(
+                                                        cells=[
+                                                            ft.DataCell(ft.Text(value="Sódio (mg)")),
+                                                            ft.DataCell(sodio_field_100),
+                                                            ft.DataCell(sodio_field_0),
+                                                            ft.DataCell(sodio_field_vd),
+                                                        ]
+                                                    ),
+                                                ],
+                                                expand=1
+                                            )
+                                        ],
+                                        expand=1
+                                    )
+                                )
+                            )
+                        ],
+                        expand=1
+                    )
+                ],
+                expand=1
+            )
+        ),
+        actions=[
+            ft.TextButton("Fechar", on_click=fechar_dialog_produto),
+            ft.ElevatedButton(
+                text="Salvar",
+                style=ft.ButtonStyle(
+                    shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
+                    bgcolor=ft.colors.BLUE,
+                    color=ft.colors.WHITE
                 ),
-            ]
-        )
+                on_click=salvar_novo_produto
+            ),
+        ]
+        
+    )
+    
+   
     page.overlay.append(dialog_produto)
     page.overlay.append(dialog_tipo)
-    page.update()
     
-    # def adicionar_produto(e):
-    #     abrir_dialog_produto()
+    page.update()
+   
+    def carregar_produtos(pagina_atual, itens_por_pagina):
+        produtos = controller.obter_item_nutricional()
+        inicio = (pagina_atual - 1) * itens_por_pagina
+        fim = inicio + itens_por_pagina
+        return produtos[inicio:fim]
 
-    def carregar_produtos():
-        produtos = controller.obter_itens_nutricionais()
+    def gerar_linhas_tabela(produtos):       
         rows = []
         for produto in produtos:
             rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(value=produto['codigo'])),  # Uso de chaves para acessar valores do dicionário
-                        ft.DataCell(ft.Text(value=produto['corte'])),
-                        ft.DataCell(ft.Text(value=produto['tipo'])),
-                        ft.DataCell(ft.Text(value=produto['preco'])),
+                        ft.DataCell(ft.Text(value=produto.codigo)),
+                        ft.DataCell(ft.Text(value=produto.corte)),
+                        ft.DataCell(ft.Text(value=produto.tipo_id)),
+                        ft.DataCell(ft.Text(value=produto.preco)),
                         ft.DataCell(
                             ft.Row(
                                 controls=[
@@ -626,14 +566,13 @@ def produto(page: ft.Page):
                                         text=".",
                                         icon=ft.icons.EDIT,
                                         width=50,
-                                        # on_click=lambda e, p=produto['id']: editar_produto(e, p)
-                                        on_click=lambda e, p=produto['id']: abrir_dialog_produto(e, p)
+                                        on_click=lambda e, p=produto.id: abrir_dialog_produto(e, p)
                                     ),
                                     ft.ElevatedButton(
                                         text=".",
                                         icon=ft.icons.DELETE,
                                         width=50,
-                                        on_click=lambda e, p=produto['id']: deletar_produto(e, p)
+                                        on_click=lambda e, p=produto.id: deletar_produto(e, p)
                                     ),
                                 ],
                                 spacing=10,
@@ -643,13 +582,40 @@ def produto(page: ft.Page):
                 )
             )
         return rows
-
-    def atualizar_tabela(e):
-        tabela.rows.clear()
-        tabela.rows.extend(carregar_produtos())
-        page.update()
     
+    def deletar_produto(e, produto_id):
+        try:
+            controller.excluir_item_nutricional(produto_id)
+            nonlocal total_produtos, pagina_atual
+            total_produtos = obter_total_produtos()  # Atualiza o total de produtos
+            # Verifica se a página atual deve ser reduzida após a exclusão
+            if (pagina_atual - 1) * itens_por_pagina >= total_produtos and pagina_atual > 1:
+                pagina_atual -= 1
+            atualizar_tabela(None)
+            page.snack_bar = ft.SnackBar(
+                content=ft.Text('Produto excluído com sucesso!'),
+                bgcolor=ft.colors.GREEN
+            )
+            page.snack_bar.open = True
+            page.update()
+        except Exception as ex:
+            page.snack_bar = ft.SnackBar(
+                content=ft.Text(f'Erro ao excluir produto: {str(ex)}'),
+                bgcolor=ft.colors.RED
+            )
+            page.snack_bar.open = True
+            page.update()    
+        
+        
+    def atualizar_tabela(e):
+        produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
+        tabela.rows.clear()
+        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina))
+        paginacao_controls.controls[1].value = f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"
+        tabela.update()  # Atualiza a tabela dinamicamente
+        page.update()
 
+    
     def salvar_novo_tipo(dialog):
         novo_tipo = novo_tipo_field.value
         if novo_tipo:  # Certifique-se de que algo foi digitado
@@ -660,8 +626,26 @@ def produto(page: ft.Page):
                 content=ft.Text('Tipo adicionado com sucesso!'),
                 bgcolor=ft.colors.GREEN
             )
+            nonlocal total_produtos
+            total_produtos = obter_total_produtos()
+            atualizar_tabela(None)
             page.snack_bar.open = True
-            page.update()
+            page.update()            
+  
+            
+    def proxima_pagina(e):
+        nonlocal pagina_atual
+        if pagina_atual * itens_por_pagina < total_produtos:
+            pagina_atual += 1
+            atualizar_tabela(e)
+
+    def pagina_anterior(e):
+        nonlocal pagina_atual
+        if pagina_atual > 1:
+            pagina_atual -= 1
+            atualizar_tabela(e)
+
+
 
     def atualizar_dropdown_tipo(selecionar_ultimo=False):
         tipos = controller.obter_tipo()  # Função que obtém a lista de tipos do banco de dados
@@ -670,9 +654,7 @@ def produto(page: ft.Page):
             tipo_carne_dropdown.value = tipos[-1].tipo  # Definir o último tipo como selecionado
         else:
             tipo_carne_dropdown.value = None  # Reset dropdown selection se não houver tipos
-        tipo_carne_dropdown.update()
-
-    
+        tipo_carne_dropdown.update()  
 
     search_row = ft.Row(
         controls=[
@@ -698,11 +680,19 @@ def produto(page: ft.Page):
             ft.DataColumn(ft.Text(value="Preço")),
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        rows=carregar_produtos(),
+        rows=[],
         expand=True
     )
-
     
+    paginacao_controls = ft.Row(
+        controls=[
+            ft.IconButton(icon=ft.icons.CHEVRON_LEFT, on_click=pagina_anterior),
+            ft.Text(value=f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"),
+            ft.IconButton(icon=ft.icons.CHEVRON_RIGHT, on_click=proxima_pagina)
+        ],
+        alignment=ft.MainAxisAlignment.CENTER
+    )
+
 
     return ft.Column(
         controls=[
@@ -731,7 +721,8 @@ def produto(page: ft.Page):
                         ft.Row(
                             controls=[tabela],
                             alignment=ft.MainAxisAlignment.CENTER
-                        )
+                        ),
+                        paginacao_controls
                     ],
                     expand=True
                 ),
