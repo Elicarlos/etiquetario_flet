@@ -34,19 +34,7 @@ class Controller:
         except Exception as e:
             print(f'Erro ao criar tipo: {str(e)}')
 
-    @staticmethod
-    def salvar_produto(dados_produto):
-        # Lógica para salvar o produto, por exemplo, em um banco de dados
-        # Certifique-se de implementar essa lógica adequadamente
-        print("Salvando produto:", dados_produto)
-
-        try:
-            with db.atomic():
-                # Criar instância do modelo ItemNutricional
-                item_nutricional = ItemNutricional.create(**dados_produto)
-                print(f'Produto {item_nutricional.id} salvo com sucesso!')
-        except Exception as e:
-            print(f'Erro ao salvar produto: {str(e)}')
+    
 
     @staticmethod
     def salvar_tipo(dados_produto):
@@ -85,18 +73,20 @@ class Controller:
     
     
     @staticmethod
-    def salvar_temperatura(dados_produto):
-        # Lógica para salvar o produto, por exemplo, em um banco de dados
-        # Certifique-se de implementar essa lógica adequadamente
-        print("Salvando produto:", dados_produto)
-
+    def salvar_produto(produto_dados):
         try:
-            with db.atomic():
-                # Criar instância do modelo ItemNutricional
-                temperatura = Temperatura.create(**dados_produto)
-                print(f'Produto {temperatura.id} salvo com sucesso!')
+            # Obter ou criar o tipo
+            tipo_nome = produto_dados.pop('tipo')
+            tipo, created = Tipo.get_or_create(tipo=tipo_nome)
+            
+            # Adicionar o ID do tipo aos dados do produto
+            produto_dados['tipo'] = tipo.id
+            
+            # Criar o item nutricional
+            item_nutricional = ItemNutricional.create(**produto_dados)
+            print("Produto salvo com sucesso!")
         except Exception as e:
-            print(f'Erro ao salvar produto: {str(e)}')
+            print(f"Erro ao salvar produto: {e}")
 
     @staticmethod
     def atualizar_temperatura(item_id, valores_entradas):
@@ -160,7 +150,18 @@ class Controller:
 
     @staticmethod
     def atualizar_item_nutricional(item_id, valores_entradas):
-        return ItemNutricional.update(**valores_entradas).where(ItemNutricional.id == item_id).execute()
+        try:
+            # Verificar e processar o tipo se estiver nos valores de entrada
+            if 'tipo' in valores_entradas:
+                tipo_nome = valores_entradas.pop('tipo')
+                tipo, created = Tipo.get_or_create(tipo=tipo_nome)
+                valores_entradas['tipo'] = tipo.id
+
+            # Atualizar o item nutricional
+            rows_updated = ItemNutricional.update(**valores_entradas).where(ItemNutricional.id == item_id).execute()
+            print(f"{rows_updated} registro(s) atualizado(s) com sucesso!")
+        except Exception as e:
+            print(f"Erro ao atualizar produto: {e}")
 
     @staticmethod
     def excluir_item_nutricional(item_id):

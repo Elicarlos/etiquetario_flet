@@ -1,1 +1,1 @@
-{"localhost": "localhost", "database": "etiquetario", "user": "root", "password": "root", "port": 3306}
+{"localhost": "localhosts", "database": "etiquetario", "user": "root", "password": "root", "port": "3306"}

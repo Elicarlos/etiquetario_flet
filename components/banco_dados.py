@@ -74,7 +74,7 @@ def banco_dados(page: ft.Page):
             'database': database_field.value,
             'user': user_field.value,
             'password': password_field.value,
-            'port': port_field
+            'port': port_field.value
         }
 
         salvar_configuracao(config)

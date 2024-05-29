@@ -72,8 +72,9 @@ def produto(page: ft.Page):
             dialog_produto.open = True
             page.update()
             
-    def create_text_field(label=None, width=None, expand=False, multiline=False, height=None):
+    def create_text_field(hint_text=None, label=None, width=None, expand=False, multiline=False, height=None):
         return ft.TextField(
+            hint_text=hint_text,
             label=label,
             width=width,
             expand=expand,
@@ -112,16 +113,18 @@ def produto(page: ft.Page):
         dialog_tipo.open = False
         page.update()
         abrir_dialog_produto(e)
+        
+    search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Busca", width=500)
     
-    search_input = ft.TextField(
-        hint_text="Busque por código, código de barras ou nome do produto...",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        color=ft.colors.BLUE,
-        border_width=1,
-        width=500,
-    )
+    # search_input = ft.TextField(
+    #     hint_text="Busque por código, código de barras ou nome do produto...",
+    #     border_radius=ft.border_radius.all(2),
+    #     bgcolor=ft.colors.WHITE,
+    #     hover_color=ft.colors.WHITE,
+    #     color=ft.colors.BLUE,
+    #     border_width=1,
+    #     width=500,
+    # )
     
     tipo_carne_dropdown = ft.Dropdown(
         label="Tipo de Carne",
@@ -219,6 +222,7 @@ def produto(page: ft.Page):
     sodio_field_vd = create_small_text_field()
  
     def salvar_novo_produto(e, produto_id=None):
+        print(tipo_carne_dropdown.value)
         
         dados_produto = {
             'codigo': codigo_field.value,
