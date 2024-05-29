@@ -98,7 +98,7 @@ def home(page: ft.Page):
         etiquetas_disponiveis = []
         if diretorio_etiquetas.exists():
             etiquetas = [f for f in os.listdir(diretorio_etiquetas) if f.endswith('.py') and f != '__init__.py']
-            etiquetas_disponiveis = [f[:20] for f in etiquetas]
+            etiquetas_disponiveis = [f[:1000] for f in etiquetas]
             
         else:
             print('Sem diretorio de etiquetas')
@@ -111,15 +111,15 @@ def home(page: ft.Page):
                 impressoras.append(printer[2])
             return impressoras
         
-    def criar_etiqueta(id_produto, etiqueta_selecionada):
-        path_etiqueta = Path(__file__).parent / '../etiquetas' / f'{etiqueta_selecionada}.py'
+    def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, etiqueta_selecionada, impressora, quantidade, sexo):
+        path_etiqueta = Path(__file__).parent / '../etiquetas' / f'{etiqueta_selecionada}'
         
         if path_etiqueta.exists():
             print('Etiqueta Existe dentro do método')
             spec = importlib.util.spec_from_file_location(etiqueta_selecionada, path_etiqueta)
             etiqueta_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(etiqueta_module)
-            return etiqueta_module.criar_etiqueta(id_produto)
+            return etiqueta_module.criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo)
         
         else:
             print(f"Arquivo de etiqueta {etiqueta_selecionada}.py nao encontrada")
@@ -144,22 +144,26 @@ def home(page: ft.Page):
         print(f'Etiqueta impressa com sucesso {quantidade} vezes!')
         
         
-    def imprimir(e):
+    def imprimir(e, produto_id=None):
         fabricacao = fabricacao_field.value
         vencimento = vencimento_field.value
         temperatura = dropdown_temperatura.value
         etiqueta = dropdown_etiquetas.value
         impressora = dropdown_impressoras.value
         quantidade = int(quantidade_impressao_textfield.value)
+        sexo = dropdown_sexo.value
         
-        conteudo = criar_etiqueta(id_produto, etiqueta)
-        imprimir_etiqueta(conteudo, impressora, quantidade)
-    
-    
-    
-    
-    
-            
+        if produto_id is None:
+            exibir_mensagem_erro(page, "Produto não especificado.")
+            return
+        
+        conteudo_etiqueta = criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, etiqueta, impressora, quantidade, sexo)
+        if conteudo_etiqueta:
+            imprimir_etiqueta(conteudo_etiqueta, impressora, quantidade)
+            exibir_mensagem_sucesso(page, f'Etiqueta impressa com sucesso {quantidade} vezes!')
+        else:
+            exibir_mensagem_erro(page, "Erro ao criar a etiqueta.")
+        fechar_popup_print(e)          
             
     
     def abrir_dialog_produto(e, produto_id=None):
@@ -180,13 +184,12 @@ def home(page: ft.Page):
         dialog_tipo.open = True
         page.update()
         
-    def abrir_dialog_print(e):
+    def abrir_dialog_print(e, produto_id):
         etiquetas_disponiveis = carregar_etiquetas()
-       
+    
         if etiquetas_disponiveis:
             dropdown_etiquetas.options = [ft.dropdown.Option(etiqueta) for etiqueta in etiquetas_disponiveis]
             dropdown_etiquetas.update()  # Atualize o dropdown com as novas opções
-            
         
         else:
             page.snack_bar = ft.SnackBar(
@@ -195,6 +198,10 @@ def home(page: ft.Page):
             )
             page.snack_bar.open = True
         dialog_print.open = True
+        dialog_print.update()
+
+        # Definir a função de clique para o botão de impressão
+        dialog_print.actions[-1].on_click = lambda e: imprimir(e, produto_id)
         page.update()
 
     def fechar_popup_tipo(e):
@@ -273,22 +280,28 @@ def home(page: ft.Page):
     )
 
     dropdown_etiquetas = ft.Dropdown(
-                        label="Selecione uma etiqueta",
-                        hint_text="Selecione a etiqueta",                                       
-                        
-                        options=[]
-                        )
+        label="Selecione uma etiqueta",
+        hint_text="Selecione a etiqueta",                                  
+        options=[]
+    )
     
     impressoras_disponiveis =  obter_impressoras()
     dropdown_impressoras = ft.Dropdown(
-        hint_text="Selecione a impressora",
-        
+        hint_text="Selecione a impressora",        
         options=[ft.dropdown.Option(impressora) for impressora in impressoras_disponiveis],
         width=300
     )
     quantidade_impressao_textfield = ft.TextField(label="Quantidade")
     fabricacao_field = ft.TextField(label="Fabricação")
     vencimento_field  = ft.TextField(label="Vencimento")
+    dropdown_sexo = ft.Dropdown(
+        hint_text="Sexo",
+        options=[
+            ft.dropdown.Option("F"),
+            ft.dropdown.Option("M"),
+        ]
+                        
+    )
     
     dialog_print = ft.AlertDialog(
         modal=True,
@@ -306,16 +319,8 @@ def home(page: ft.Page):
                     vencimento_field,                    
                     dropdown_temperatura,
                     dropdown_impressoras,
-                    dropdown_etiquetas
-                    ,
-                    ft.Dropdown(
-                        hint_text="Sexo",
-                        options=[
-                            ft.dropdown.Option("F"),
-                            ft.dropdown.Option("M"),
-                        ]
-                        
-                    ),
+                    dropdown_etiquetas,
+                    dropdown_sexo,
                     quantidade_impressao_textfield                               
 
                 ]
@@ -814,7 +819,7 @@ def home(page: ft.Page):
                                         icon=ft.icons.PRINT,
                                         width=50,
                                         # on_click=lambda e, p=produto['id']: dialog_print(e, p)
-                                        on_click=abrir_dialog_print
+                                        on_click=lambda e, produto_id=produto.id: abrir_dialog_print(e, produto_id)
                                     ),
                                 ],
                                 spacing=10,

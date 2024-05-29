@@ -9,6 +9,7 @@ def produto(page: ft.Page):
     
     itens_por_pagina = 5
     pagina_atual = 1
+    id_produto = None
     
     
 

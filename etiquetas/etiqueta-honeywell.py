@@ -9,9 +9,9 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 # Caminho para o novo diretório 'dados_etiquetas'
 dados_etiquetas_dir = os.path.join(script_dir, 'dados_etiquetas')
 
-def criar_etiqueta(id_produto):
-    
-    produto = ItemNutricional.get(ItemNutricional.id == id_produto)
+# def criar_etiqueta(id_produto):
+def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo):   
+    produto = ItemNutricional.get(ItemNutricional.id == produto_id)
     empresa  = Empresa.select()
 
     tipo = produto.tipo_id    
@@ -52,8 +52,8 @@ def criar_etiqueta(id_produto):
     arquivo_path = os.path.join(dados_etiquetas_dir, 'dados.prn')
     
     peso = 1000
-    fabricacao = "20/04/2024"
-    vencimento = "21/04/2024"
+    # fabricacao = "20/04/2024"
+    # vencimento = "21/04/2024"
     lote = 1
     sif = 10
 
@@ -88,7 +88,7 @@ def criar_etiqueta(id_produto):
                 sodio_vd = sodio_vd,
                 peso = peso,
                 fabricacao = fabricacao,
-                venc = '23-04-2024',
+                venc = vencimento,
                 lote = lote,
                 numero_sif =sif,
             )
