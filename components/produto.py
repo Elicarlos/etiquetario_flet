@@ -61,8 +61,7 @@ def produto(page: ft.Page):
     def obter_total_produtos():
         return len(controller.obter_item_nutricional())  # Supondo que temos uma função para obter o número total de produtos
     
-    total_produtos = obter_total_produtos()
-    print("Container Produto", total_produtos) 
+    total_produtos = obter_total_produtos()  
 
     def abrir_dialog_produto(e, produto_id=None):
         if produto_id:
@@ -116,6 +115,7 @@ def produto(page: ft.Page):
         
     def carregar_produtos(pagina_atual, itens_por_pagina):
         produtos = controller.obter_item_nutricional()
+        print(produtos)
         inicio = (pagina_atual - 1) * itens_por_pagina
         fim = inicio + itens_por_pagina
         return produtos[inicio:fim]
@@ -127,7 +127,7 @@ def produto(page: ft.Page):
             if isinstance(produto, dict):
                 codigo = produto.get('codigo')
                 corte = produto.get('corte')
-                tipo_id = produto.get('tipo_id')
+                tipo_nome = produto.get('tipo').get('tipo') if produto.get('tipo') else ""
                 preco = produto.get('preco')
                 produto_id = produto.get('id')               
                 
@@ -135,7 +135,7 @@ def produto(page: ft.Page):
             else:  # Assume que é um objeto ItemNutricional
                 codigo = produto.codigo
                 corte = produto.corte
-                tipo_id = produto.tipo_id
+                tipo_nome = produto.tipo.tipo if produto.tipo else ""
                 preco = produto.preco 
                 produto_id = produto.id   
             rows.append(
@@ -143,7 +143,7 @@ def produto(page: ft.Page):
                     cells=[
                         ft.DataCell(ft.Text(value=str(codigo))),
                         ft.DataCell(ft.Text(value=str(corte))),
-                        ft.DataCell(ft.Text(value=str(tipo_id))),  # Certifique-se de que tipo_id é o atributo correto
+                        ft.DataCell(ft.Text(value=str(tipo_nome))),  # Certifique-se de que tipo_id é o atributo correto
                         ft.DataCell(ft.Text(value=str(preco))),
                         ft.DataCell(
                             ft.Row(
