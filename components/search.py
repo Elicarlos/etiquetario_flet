@@ -1,21 +1,26 @@
 import flet as ft
 
 def search(adicionar_produto):
-    def realizar_busca(e):
-        print(search_input.value)
+    # def realizar_busca(e):
+    #     print(search_input.value)
     
-    search_input = ft.TextField(
-        hint_text="Busque por código, código de barras ou nome do produto...",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        color=ft.colors.BLUE,
-        border_width=0,
-        width=500,     
-        # icon=ft.icons.SEARCH,
-        # on_submit=realizar_busca,       
-        
-    )
+    def create_text_field(hint_text=None,label=None, width=None, expand=False, multiline=False, height=None):
+        return ft.TextField(
+            hint_text=None,
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )    
+   
+    search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Buscar", width=500)
        
     search_row = ft.Row(
         controls=[

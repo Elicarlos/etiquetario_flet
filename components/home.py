@@ -90,9 +90,7 @@ def home(page: ft.Page):
     def obter_total_produtos():
         return len(controller.obter_item_nutricional())  # Supondo que temos uma função para obter o número total de produtos
     
-    total_produtos = obter_total_produtos()  
-    
-    print("Container Hpme", total_produtos) 
+    total_produtos = obter_total_produtos()    
     
     def carregar_etiquetas():
         p = Path(__file__).parent
@@ -221,14 +219,22 @@ def home(page: ft.Page):
         fim = inicio + itens_por_pagina
         return produtos[inicio:fim]
     
-    def gerar_linhas_tabela(produtos):
-               
+    tipos_cache = controller.obter_tipo()
+    
+    def obter_nome_tipo_por_id(tipo_id, tipos_cache):
+        for tipo in tipos_cache:
+            if tipo.id == tipo_id:
+                return tipo.tipo
+        return ""
+    
+    def gerar_linhas_tabela(produtos, tipos_cache):               
         rows = []
-        for produto in produtos:
+        for produto in produtos:            
             if isinstance(produto, dict):
                 codigo = produto.get('codigo')
                 corte = produto.get('corte')
-                tipo_nome = produto.get('tipo').get('tipo') if produto.get('tipo') else ""
+                tipo_id = produto.get('tipo')
+                tipo_nome = obter_nome_tipo_por_id(tipo_id, tipos_cache) if tipo_id else ""
                 preco = produto.get('preco')
                 produto_id = produto.get('id')               
                 
@@ -252,8 +258,7 @@ def home(page: ft.Page):
                                     ft.ElevatedButton(
                                         text=".",
                                         icon=ft.icons.PRINT,
-                                        width=50,
-                                        # on_click=lambda e, p=produto['id']: dialog_print(e, p)
+                                        width=50,                                        
                                         on_click=lambda e, produto_id=produto_id: abrir_dialog_print(e, produto_id)
                                     ),
                                 ],
@@ -263,7 +268,8 @@ def home(page: ft.Page):
                     ]
                 )
             )
-        return rows   
+        return rows 
+     
     
     tabela = ft.DataTable(
         columns=[
@@ -273,8 +279,7 @@ def home(page: ft.Page):
             ft.DataColumn(ft.Text(value="Preço")),
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        # rows=[],
-        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina)),
+        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina), tipos_cache),
         expand=True
     )
         
@@ -285,11 +290,13 @@ def home(page: ft.Page):
         else:
             produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
             
+        tipos_cache = controller.obter_tipo() 
         tabela.rows.clear()
-        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina))
+        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina, tipos_cache))
         paginacao_controls.controls[1].value = f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"
         tabela.update()
         page.update()
+
 
     search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Busca", width=500)
     search_input.on_change = atualizar_tabela

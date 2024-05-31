@@ -214,6 +214,7 @@ class Controller:
         resultados = (ItemNutricional
                       .select()
                       .where(
+                          (ItemNutricional.codigo == termo_pesquisa) |
                           (ItemNutricional.codigo_barras == termo_pesquisa) |
                           (ItemNutricional.corte == termo_pesquisa) 
                       )

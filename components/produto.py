@@ -120,14 +120,22 @@ def produto(page: ft.Page):
         fim = inicio + itens_por_pagina
         return produtos[inicio:fim]
     
-    def gerar_linhas_tabela(produtos):
-               
+    tipos_cache = controller.obter_tipo()
+    
+    def obter_nome_tipo_por_id(tipo_id, tipos_cache):
+        for tipo in tipos_cache:
+            if tipo.id == tipo_id:
+                return tipo.tipo
+        return ""
+    
+    def gerar_linhas_tabela(produtos, tipos_cache):                
         rows = []
         for produto in produtos:
             if isinstance(produto, dict):
                 codigo = produto.get('codigo')
                 corte = produto.get('corte')
-                tipo_nome = produto.get('tipo').get('tipo') if produto.get('tipo') else ""
+                tipo_id = produto.get('tipo')
+                tipo_nome = obter_nome_tipo_por_id(tipo_id, tipos_cache) if tipo_id else ""
                 preco = produto.get('preco')
                 produto_id = produto.get('id')               
                 
@@ -137,7 +145,7 @@ def produto(page: ft.Page):
                 corte = produto.corte
                 tipo_nome = produto.tipo.tipo if produto.tipo else ""
                 preco = produto.preco 
-                produto_id = produto.id   
+                produto_id = produto.id    
             rows.append(
                 ft.DataRow(
                     cells=[
@@ -177,8 +185,7 @@ def produto(page: ft.Page):
             ft.DataColumn(ft.Text(value="Preço")),
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        # rows=[],
-        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina)),
+        rows=gerar_linhas_tabela(carregar_produtos(pagina_atual, itens_por_pagina), tipos_cache),
         expand=True
     )
         
@@ -189,8 +196,9 @@ def produto(page: ft.Page):
         else:
             produtos_pagina = carregar_produtos(pagina_atual, itens_por_pagina)
             
+        tipos_cache = controller.obter_tipo()  # Obtenha os tipos uma vez e use como cache
         tabela.rows.clear()
-        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina))
+        tabela.rows.extend(gerar_linhas_tabela(produtos_pagina, tipos_cache))
         paginacao_controls.controls[1].value = f"Página {pagina_atual} de {((total_produtos + itens_por_pagina - 1) // itens_por_pagina)}"
         tabela.update()
         page.update()

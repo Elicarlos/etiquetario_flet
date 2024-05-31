@@ -16,6 +16,22 @@ def tipo(page: ft.Page):
     itens_por_pagina = 5
     pagina_atual = 1
     
+    def create_text_field(hint_text=None,label=None, width=None, expand=False, multiline=False, height=None):
+        return ft.TextField(
+            hint_text=None,
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )
+    
     # def alert(mensagem, bgcolor_message):
     #     page.snack_bar = ft.SnackBar(
     #             content=ft.Text(mensagem),
@@ -45,17 +61,9 @@ def tipo(page: ft.Page):
 
     def fechar_popup_tipo(e):
         dialog_tipo.open = False
-        page.update()
-
-    search_input = ft.TextField(
-        hint_text="Busque por código, código de barras ou nome do produto...",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        color=ft.colors.BLUE,
-        border_width=1,
-        width=500,
-    )
+        page.update()   
+    
+    search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Buscar", width=500)
     
     tipo_carne_dropdown = ft.Dropdown(
         label="Tipo de Carne",
