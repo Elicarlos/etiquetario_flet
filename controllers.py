@@ -1,4 +1,4 @@
-from models import Empresa, Temperatura, Tipo, ItemNutricional, db
+from models import Empresa, Lote, Temperatura, Tipo, ItemNutricional, db
 
 
 class Controller:
@@ -206,6 +206,8 @@ class Controller:
     def excluir_tipo(item_id):
         return Tipo.delete().where(Tipo.id == item_id).execute()
     
+    
+    
 
     @staticmethod
     def pesquisa(termo_pesquisa):
@@ -221,3 +223,30 @@ class Controller:
                       .dicts()).execute()
 
         return list(resultados)
+    
+    
+    @staticmethod
+    def obter_lote():
+        lote = Lote.select()
+        return lote
+    
+
+    @staticmethod
+    def criar_lote(lote):
+        try:
+            with db.atomic():
+                
+                Lote.create(lote=lote)
+            print(f'Tipo "{Lote}" criado com sucesso!')
+        except Exception as e:
+            print(f'Erro ao criar lote: {str(e)}')
+            
+    @staticmethod
+    def excluir_lote(id_lote):
+        return Lote.delete().where(Lote.id == id_lote).execute()
+    
+    @staticmethod
+    def atualizar_lote(id_lote, lote):
+        return Lote.update(lote=lote).where(Lote.id == id_lote).execute()
+    
+    

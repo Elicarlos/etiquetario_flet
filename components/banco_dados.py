@@ -2,6 +2,22 @@ import flet as ft
 import json
 
 def banco_dados(page: ft.Page):
+    def create_text_field(hint_text=None,label=None, width=None, expand=False, multiline=False, height=None, value=None):
+        return ft.TextField(
+            hint_text=None,
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )
+        
     def carregar_configuracao():
         try:
             with open('db_config.json', 'r') as f:
@@ -15,56 +31,40 @@ def banco_dados(page: ft.Page):
 
     config = carregar_configuracao()
 
-    host_field = ft.TextField(
+    host_field = create_text_field(
         label="Localhost",
         hint_text="Localhost",
         value=config.get('localhost', ''),
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
+        
     )
 
-    database_field = ft.TextField(
+    database_field = create_text_field(
         label="Database",
         hint_text="Database",
         value=config.get('database', ''),
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
+        
     )
 
-    user_field = ft.TextField(
+    user_field = create_text_field(
         label="User",
         hint_text="User",
         value=config.get('user', ''),
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
+        
     )
 
-    password_field = ft.TextField(
+    password_field = create_text_field(
         label="Password",
         hint_text="Password",
-        value=config.get('password', ''),
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        password=True  # Este campo será tratado como senha
+        value=config.get('password', '')
+        
+        
     )
     
-    port_field = ft.TextField(
+    port_field = create_text_field(
         label="Port",
         hint_text="Port",
-        value=config.get('port', ''),
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        password=True  # Este campo será tratado como senha
+        value=config.get('port', '')        
+       
     )
 
     def salvar_dados_conexao(e):

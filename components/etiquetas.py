@@ -2,48 +2,31 @@ import flet as ft
 # from components.search import search
 
 
-def etiquetas(page: ft.Page):  
+def etiquetas(page: ft.Page):
+    
+    def create_text_field(hint_text=None,label=None, width=None, expand=False, multiline=False, height=None):
+        return ft.TextField(
+            hint_text=None,
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )  
             
-    localhost_field = ft.TextField(
-        label="Localhost",
-        hint_text="Localhost",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    localhost_field = create_text_field(label="Localhost", hint_text="Localhost")
 
-    database_field = ft.TextField(
-        label="Database",
-        hint_text="Database",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    database_field = create_text_field(label="Database", hint_text="Database")
 
-    user_field = ft.TextField(
-        label="User",
-        hint_text="User",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    user_field = create_text_field(label="User", hint_text="User")
 
-    password_field = ft.TextField(
-        label="Password",
-        hint_text="Password",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True,
-        password=True  # Este campo será tratado como senha
-    ) 
+    password_field = create_text_field(label="Password", hint_text="Password") 
     
     return ft.Container(
         content=ft.Column(            

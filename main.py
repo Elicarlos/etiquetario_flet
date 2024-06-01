@@ -1,3 +1,4 @@
+from components.lote import lote
 from components.produto import produto
 from controllers import Controller
 import flet as ft
@@ -104,6 +105,7 @@ def main(page: ft.Page):
     empresa_container = empresa(page)
     produto_container = produto(page)
     tipo_container = tipo(page)
+    lote_container = lote(page)
     banco_dados_container = banco_dados(page)
     etiquetas_container = etiquetas(page)
     temperatura_container = temperatura(page)
@@ -155,6 +157,7 @@ def main(page: ft.Page):
                     ft.ListTile(title=ft.TextButton(text="Corte", on_click=lambda _: [atualizar_produto_container(), show_only(produto_container)])),
                     ft.ListTile(title=ft.TextButton(text="Tipo", on_click=lambda _: [atualizar_tipo_container(), show_only(tipo_container)])),
                     ft.ListTile(title=ft.TextButton(text="Temperatura", on_click=lambda _: [atualizar_temperatura_container(), show_only(temperatura_container)])),
+                    ft.ListTile(title=ft.TextButton(text="Lote", on_click=lambda _: [atualizar_temperatura_container(), show_only(lote_container)])),
                 ],
             ),
             ft.ExpansionTile(

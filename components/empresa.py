@@ -7,56 +7,32 @@ def empresa(page: ft.Page):
     controller = Controller()
     empresa_existente = Controller.obter_empresas().first()
     
+    def create_text_field(hint_text=None,label=None, width=None, expand=False, multiline=False, height=None):
+        return ft.TextField(
+            hint_text=None,
+            label=label,
+            width=width,
+            expand=expand,
+            multiline=multiline,
+            height=height,
+            border_radius=ft.border_radius.all(2),
+            bgcolor=ft.colors.WHITE,
+            color=ft.colors.GREY_900,
+            hover_color=ft.colors.WHITE,
+            border_color=ft.colors.GREY_300,
+            border_width=1
+        )
+    
        
-    cnpj_field = ft.TextField(
-        label="Cnpj",
-        hint_text="Cnpj",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        autofocus=True,
-    )
+    cnpj_field = create_text_field(label="Cnpj", hint_text="Cnpj")
         
-    razao_social_field = ft.TextField(
-        label="Razão Social",
-        hint_text="Razão Social",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    razao_social_field = create_text_field(label="Razão Social",hint_text="Razão Social")
         
-    fantasia_field = ft.TextField(
-        label="Fantasia",
-        hint_text="Fantasia",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    fantasia_field = create_text_field(label="Fantasia", hint_text="Fantasia")
         
-    numero_sif_field = ft.TextField(
-        label="Numero SIF",
-        hint_text="Numero SIF",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    numero_sif_field = create_text_field(label="Numero SIF", hint_text="Numero SIF")
         
-    registro_adapi_field = ft.TextField(
-        label="Registro ADAPI",
-        hint_text="Registro ADAPI",
-        border_radius=ft.border.all(2),
-        bgcolor=ft.colors.WHITE,
-        hover_color=ft.colors.WHITE,
-        border_width=1,
-        expand=True
-    )
+    registro_adapi_field = create_text_field(label="Registro ADAPI", hint_text="Registro ADAPI")
     
     error_message = ft.Text(value="", color=ft.colors.RED)
     success_message = ft.Text(value="", color=ft.colors.GREEN)

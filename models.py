@@ -90,7 +90,12 @@ class ItemNutricional(Base):
 
 class Temperatura(Base):
     temperatura = CharField(max_length=250)
+    
+class Lote(Base):
+    lote = CharField(max_length=250)
+    
+    
 
 # Conectar e criar tabelas
 db.connect()
-db.create_tables([ItemNutricional, Empresa, Tipo, Temperatura])
+db.create_tables([ItemNutricional, Empresa, Tipo, Temperatura, Lote])

@@ -2,9 +2,16 @@ import flet as ft
 from controllers import Controller
 from utils.notifications import exibir_mensagem_sucesso, exibir_mensagem_erro, exibir_messagem_delete
 
-def temperatura(page: ft.Page):
+
+
+def lote(page: ft.Page):
     controller = Controller()
-    temperatura_atual = None
+    
+    
+    success_color = ft.colors.GREEN
+    error_color = ft.colors.RED
+    
+    lote_atual = None
     
     itens_por_pagina = 5
     pagina_atual = 1
@@ -25,50 +32,58 @@ def temperatura(page: ft.Page):
             border_width=1
         )
     
+    # def alert(mensagem, bgcolor_message):
+    #     page.snack_bar = ft.SnackBar(
+    #             content=ft.Text(mensagem),
+    #             bgcolor=bgcolor_message,                
+    #         )
+    #     page.snack_bar.open = True
+    
     def limpar_campos():
-        nova_temperatura_field = ""
+        novo_lote_field = ""
         page.update()
         
 
-    def obter_total_temperatura():
-        return len(controller.obter_temperatura())  # Supondo que temos uma função para obter o número total de temperaturas
+    def obter_total_lotes():
+        return len(controller.obter_lote())  # Supondo que temos uma função para obter o número total de lotes
     
-    total_temperatura = obter_total_temperatura()  
+    total_lotes = obter_total_lotes()  
 
-    def abrir_dialog_temperatura(e, temperatura=None):
-        nonlocal temperatura_atual
-        temperatura_atual = temperatura
-        if temperatura:
-            nova_temperatura_field.value = temperatura.temperatura
+    def abrir_dialog_lote(e, lote=None):
+        nonlocal lote_atual
+        lote_atual = lote
+        if lote:
+            novo_lote_field.value = lote.lote
         else:
-            nova_temperatura_field.value = ""
-        dialog_temperatura.open = True
+            novo_lote_field.value = ""
+        dialog_lote.open = True
         page.update()
 
-    def fechar_popup_temperatura(e):
-        dialog_temperatura.open = False
-        page.update()
-
+    def fechar_popup_lote(e):
+        dialog_lote.open = False
+        page.update()   
+    
     search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Buscar", width=500)
     
-    nova_temperatura_field = ft.TextField(label="Nova Temperatura")
+    
+    novo_lote_field = ft.TextField(label="Novo Lote")
 
-    dialog_temperatura = ft.AlertDialog(
+    dialog_lote = ft.AlertDialog(
         modal=True,
-        title=ft.Text(value="Adicionar Temperatura"),
+        title=ft.Text(value="Adicionar Lote"),
         elevation=0,
         shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
         content=ft.Container(
             expand=True,
             width=400,
-            height=200,
+            height=100,
             margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
             content=ft.Column(
-                controls=[nova_temperatura_field]
+                controls=[novo_lote_field]
             )
         ),
         actions=[
-            ft.TextButton("Fechar", on_click=fechar_popup_temperatura),
+            ft.TextButton("Fechar", on_click=fechar_popup_lote),
             ft.ElevatedButton(
                 text="Salvar",
                 style=ft.ButtonStyle(
@@ -76,28 +91,29 @@ def temperatura(page: ft.Page):
                     bgcolor=ft.colors.BLUE,
                     color=ft.colors.WHITE
                 ),
-                on_click=lambda e: salvar_nova_temperatura(e)
+                on_click=lambda e: salvar_novo_lote(dialog_lote)
             )
         ]
     )    
     
-    page.overlay.append(dialog_temperatura)
+    page.overlay.append(dialog_lote)
+    
     page.update()
     
-    def carregar_temperatura(pagina_atual, itens_por_pagina):
-        temperaturas = controller.obter_temperatura()        
+    def carregar_lotes(pagina_atual, itens_por_pagina):
+        lotes = controller.obter_lote()
         inicio = (pagina_atual - 1) * itens_por_pagina
         fim = inicio + itens_por_pagina
-        return temperaturas[inicio:fim]
+        return lotes[inicio:fim]
 
-    def gerar_linhas_tabela(temperaturas):
+    def gerar_linhas_tabela(lotes):
         rows = []
-        for temperatura in temperaturas:
+        for lote in lotes:
             rows.append(
                 ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(value=temperatura.id)),
-                        ft.DataCell(ft.Text(value=temperatura.temperatura)),                     
+                        ft.DataCell(ft.Text(value=lote.id)),
+                        ft.DataCell(ft.Text(value=lote.lote)),                     
                         ft.DataCell(
                             ft.Row(
                                 controls=[
@@ -105,13 +121,13 @@ def temperatura(page: ft.Page):
                                         text=".",
                                         icon=ft.icons.EDIT,
                                         width=50,
-                                        on_click=lambda e, temperatura=temperatura: abrir_dialog_temperatura(e, temperatura)
+                                        on_click=lambda e, lote=lote: abrir_dialog_lote(e, lote)
                                     ),
                                     ft.ElevatedButton(
                                         text=".",
                                         icon=ft.icons.DELETE,
                                         width=50,
-                                        on_click=lambda e, temperatura_id=temperatura.id: deletar_temperatura(e, temperatura_id)
+                                        on_click=lambda e, id_lote=lote.id: deletar_lote(e, id_lote)
                     
                                     ),
                                 ],
@@ -123,55 +139,64 @@ def temperatura(page: ft.Page):
             )
         return rows
     
-    def deletar_temperatura(e, temperatura_id):
-        controller.excluir_temperatura(temperatura_id)
-        nonlocal total_temperatura, pagina_atual
-        total_temperatura = obter_total_temperatura()  # Atualiza o total de temperaturas
+    
+    def deletar_lote(e, id_lote):
+        controller.excluir_lote(id_lote)
+        nonlocal total_lotes, pagina_atual
+        total_lotes = obter_total_lotes()  # Atualiza o total de lotes
         # Verifica se a página atual deve ser reduzida após a exclusão
-        if (pagina_atual - 1) * itens_por_pagina >= total_temperatura and pagina_atual > 1:
+        if (pagina_atual - 1) * itens_por_pagina >= total_lotes and pagina_atual > 1:
             pagina_atual -= 1
         atualizar_tabela(None)  # Atualiza a tabela para refletir a exclusão
-        exibir_messagem_delete(page, 'Temperatura deletada com sucesso!')
+        exibir_messagem_delete(page, 'Lote excluído com sucesso!')
+        page.update()
+    
 
     def atualizar_tabela(e):
-        temperatura_pagina = carregar_temperatura(pagina_atual, itens_por_pagina)
+        lotes_pagina = carregar_lotes(pagina_atual, itens_por_pagina)
         tabela.rows.clear()
-        tabela.rows.extend(gerar_linhas_tabela(temperatura_pagina))
+        tabela.rows.extend(gerar_linhas_tabela(lotes_pagina))
         paginacao_controls.controls[1].value = f"Página {pagina_atual}"
         page.update()
 
-    def salvar_nova_temperatura(e):
-        nova_temperatura = nova_temperatura_field.value
-        if nova_temperatura:  # Certifique-se de que algo foi digitado
-            dados = {
-                'temperatura': nova_temperatura
-            }
+    
+    def salvar_novo_lote(e):
+        novo_lote = novo_lote_field.value
+        if novo_lote:  # Certifique-se de que algo foi digitado
             try:
-                if temperatura_atual:
-                    controller.atualizar_temperatura(temperatura_atual.id, dados)  # Atualiza a temperatura existente
-                    mensagem = 'Temperatura atualizada com sucesso!'
+                if lote_atual:
+                    controller.atualizar_lote(lote_atual.id, novo_lote)  # Atualiza o lote existente
+                    mensagem = 'Lote atualizado com sucesso!'
                     exibir_mensagem_sucesso(page, mensagem)
+                 
                 else:            
-                    controller.salvar_temperatura(dados)  # Cria uma nova temperatura
-                    mensagem = 'Temperatura adicionada com sucesso!'
+                    controller.criar_lote(novo_lote)  # Cria um novo lote
+                    mensagem = 'Lote adicionado com sucesso!'
                     exibir_mensagem_sucesso(page, mensagem)
                     limpar_campos()
                     
+                    
             except Exception as erro:
-                mensagem = f'Erro ao salvar a temperatura: {str(erro)}'
+                mensagem = f'Erro ao salvar o lote: {str(erro)}'
                 exibir_mensagem_erro(page, mensagem)
      
-            fechar_popup_temperatura(e)            
-            nonlocal total_temperatura
-            total_temperatura = obter_total_temperatura()
-            atualizar_tabela(None)
-            page.update()
-        else:
-            exibir_mensagem_erro(page, "Por favor, insira uma temperatura válida.")
             
+            fechar_popup_lote(e)            
+            nonlocal total_lotes
+            total_lotes = obter_total_lotes()
+            atualizar_tabela(None)
+            # page.snack_bar = ft.SnackBar(
+            #     content=ft.Text(mensagem),
+            #     bgcolor=ft.colors.GREEN,                
+            # )
+            # page.snack_bar.open = True
+           
+            page.update()
+            
+ 
     def proxima_pagina(e):
         nonlocal pagina_atual
-        if pagina_atual * itens_por_pagina < total_temperatura:
+        if pagina_atual * itens_por_pagina < total_lotes:
             pagina_atual += 1
             atualizar_tabela(e)
 
@@ -200,10 +225,10 @@ def temperatura(page: ft.Page):
     tabela = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text(value="Código")),
-            ft.DataColumn(ft.Text(value="Temperatura")),            
+            ft.DataColumn(ft.Text(value="Lote")),            
             ft.DataColumn(ft.Text(value="Ações")),
         ],
-        rows=gerar_linhas_tabela(carregar_temperatura(pagina_atual, itens_por_pagina)),
+        rows=gerar_linhas_tabela(carregar_lotes(pagina_atual, itens_por_pagina)),
         expand=True
     )
 
@@ -223,8 +248,8 @@ def temperatura(page: ft.Page):
                     controls=[
                         search_row,
                         ft.ElevatedButton(
-                            text="Adicionar Temperatura",
-                            on_click=abrir_dialog_temperatura,
+                            text="Adicionar lote",
+                            on_click=abrir_dialog_lote,
                             icon=ft.icons.ADD,
                             style=ft.ButtonStyle(
                                 shape=ft.RoundedRectangleBorder(radius=ft.border_radius.all(3)),
