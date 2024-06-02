@@ -44,7 +44,7 @@ class ItemNutricional(Base):
     porcao_embalagem = CharField(null=True)
     porcao = CharField(null=True)
     peso = CharField(max_length=150)
-    campo_adicional = CharField(null=True)
+    alergico = CharField(null=True)
     
     valor_energetico_100g = CharField(max_length=100, null=True)
     valor_energetico_porcao = CharField(max_length=100, null=True)

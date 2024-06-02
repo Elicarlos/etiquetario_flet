@@ -22,7 +22,7 @@ def produto(page: ft.Page):
         porcao_embalagem_field.value = ""
         porcao_field.value = ""
         peso_field.value = ""
-        adicional_field.value = ""
+        alergico_field.value = ""
         informacao_adicional_field.value = ""
         valor_energico_field_100.value = ""
         valor_energico_field_0.value = ""
@@ -256,7 +256,7 @@ def produto(page: ft.Page):
         
     porcao_field = create_text_field(label="Porção", expand=True)   
     
-    adicional_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
+    alergico_field = create_text_field(label="Campo Adicional", multiline=True, expand=True)
     
     peso_field = create_text_field(label="Peso", width=200)
     
@@ -313,7 +313,7 @@ def produto(page: ft.Page):
             'codigo_barras': codigo_barras_field.value,
             'porcao_embalagem': porcao_embalagem_field.value,
             'porcao': porcao_field.value,
-            'campo_adicional': adicional_field.value,
+            'alergico': alergico_field.value,
             'informacoes_adicionais': informacao_adicional_field.value,
             'valor_energetico_100g': valor_energico_field_100.value,
             'valor_energetico_porcao': valor_energico_field_0.value,
@@ -378,7 +378,7 @@ def produto(page: ft.Page):
             codigo_barras_field.value = produto.codigo_barras
             porcao_embalagem_field.value = produto.porcao_embalagem
             porcao_field.value = produto.porcao
-            adicional_field.value = produto.campo_adicional
+            alergico_field.value = produto.campo_adicional
             peso_field.value = produto.peso
             informacao_adicional_field.value = produto.informacoes_adicionais
 
@@ -486,7 +486,7 @@ def produto(page: ft.Page):
                                             ),
                                             ft.Row(
                                                 controls=[
-                                                    adicional_field,
+                                                    alergico_field,
                                                     peso_field
                                                 ]
                                             ),
@@ -730,7 +730,7 @@ def produto(page: ft.Page):
                     controls=[
                         search_row,
                         ft.ElevatedButton(
-                            text="Adicionar Produto",
+                            text="Adicionar Corte",
                             on_click=abrir_dialog_produto,
                             icon=ft.icons.ADD,
                             style=ft.ButtonStyle(
