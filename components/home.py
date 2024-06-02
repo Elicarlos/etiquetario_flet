@@ -4,6 +4,7 @@ from controllers import Controller
 import os
 from pathlib import Path
 import win32print
+from models import Empresa
 
 from utils.notifications import exibir_mensagem_erro, exibir_mensagem_sucesso, exibir_messagem_delete
 
@@ -13,6 +14,13 @@ def home(page: ft.Page):
     itens_por_pagina = 5
     pagina_atual = 1
     
+    
+
+
+    
+    
+ 
+ 
     def limpar_campos():
         codigo_field.value = ""
         corte_field.value = ""
@@ -105,13 +113,23 @@ def home(page: ft.Page):
         
         return etiquetas_disponiveis
     
+    def atualizar_dropdown_lote(selecionar_ultimo=False):
+        lotes = controller.obter_lote()  
+        lote_dropdown.options = [ft.dropdown.Option(lote.lote) for lote in lotes]
+        if selecionar_ultimo and lotes:
+            lote_dropdown.value = lotes[-1].lote 
+        else:
+            lote_dropdown.value = None  
+        lote_dropdown.update() 
+        
+        
     def obter_impressoras():
             impressoras = []
             for printer in win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL):
                 impressoras.append(printer[2])
             return impressoras
         
-    def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, etiqueta_selecionada, impressora, quantidade, sexo):
+    def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, etiqueta_selecionada, impressora, quantidade, sexo, lote, empresa):
         path_etiqueta = Path(__file__).parent / '../etiquetas' / f'{etiqueta_selecionada}'
         
         if path_etiqueta.exists():
@@ -119,20 +137,49 @@ def home(page: ft.Page):
             spec = importlib.util.spec_from_file_location(etiqueta_selecionada, path_etiqueta)
             etiqueta_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(etiqueta_module)
-            return etiqueta_module.criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo)
+            return etiqueta_module.criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo, lote, empresa)
         
         else:
             print(f"Arquivo de etiqueta {etiqueta_selecionada}.py nao encontrada")
             
     
-    def imprimir_etiqueta(conteudo, impressora, quantidade):       
+    # def imprimir_etiqueta(conteudo, impressora, quantidade):       
  
+    #     if impressora is None:
+    #         impressora = win32print.GetDefaultPrinter()
+        
+    #     handle_impressora = win32print.OpenPrinter(impressora)
+    #     try:
+    #         conteudo_bytes = conteudo.encode('utf-8')
+    #         job = win32print.StartDocPrinter(handle_impressora, 1, ("Impressão de Etiqueta", None, "RAW"))
+    #         for _ in range(quantidade):
+    #             win32print.StartPagePrinter(handle_impressora)
+    #             win32print.WritePrinter(handle_impressora, conteudo_bytes)
+    #             win32print.EndPagePrinter(handle_impressora)
+    #         win32print.EndDocPrinter(handle_impressora)
+    #     finally:
+    #         win32print.ClosePrinter(handle_impressora)
+    #     print(f'Etiqueta impressa com sucesso {quantidade} vezes!')
+    
+
+
+    def imprimir_etiqueta(conteudo, impressora, quantidade):       
         if impressora is None:
             impressora = win32print.GetDefaultPrinter()
         
         handle_impressora = win32print.OpenPrinter(impressora)
         try:
+            # Se a impressora ZPL suportar, adicione o comando ^CI28 para definir a codificação UTF-8 no início do conteúdo ZPL
+            # conteudo = "^CI28\n" + conteudo
+            
+            # Debug: Exibir conteúdo antes da codificação
+            print("Conteúdo ZPL antes da codificação:", conteudo)
+            
             conteudo_bytes = conteudo.encode('utf-8')
+            
+            # Debug: Exibir conteúdo após codificação
+            print("Conteúdo ZPL após codificação:", conteudo_bytes)
+            
             job = win32print.StartDocPrinter(handle_impressora, 1, ("Impressão de Etiqueta", None, "RAW"))
             for _ in range(quantidade):
                 win32print.StartPagePrinter(handle_impressora)
@@ -142,7 +189,7 @@ def home(page: ft.Page):
         finally:
             win32print.ClosePrinter(handle_impressora)
         print(f'Etiqueta impressa com sucesso {quantidade} vezes!')
-        
+
         
     def imprimir(e, produto_id=None):
         fabricacao = fabricacao_field.value
@@ -152,12 +199,15 @@ def home(page: ft.Page):
         impressora = dropdown_impressoras.value
         quantidade = int(quantidade_impressao_textfield.value)
         sexo = dropdown_sexo.value
+        lote = lote_dropdown.value
+        
+        empresa = controller.empresas()
         
         if produto_id is None:
             exibir_mensagem_erro(page, "Produto não especificado.")
             return
         
-        conteudo_etiqueta = criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, etiqueta, impressora, quantidade, sexo)
+        conteudo_etiqueta = criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, etiqueta, impressora, quantidade, sexo, lote, empresa)
         if conteudo_etiqueta:
             imprimir_etiqueta(conteudo_etiqueta, impressora, quantidade)
             exibir_mensagem_sucesso(page, f'Etiqueta impressa com sucesso {quantidade} vezes!')
@@ -186,6 +236,8 @@ def home(page: ft.Page):
         
     def abrir_dialog_print(e, produto_id):
         etiquetas_disponiveis = carregar_etiquetas()
+        atualizar_dropdown_lote(selecionar_ultimo=True)
+
     
         if etiquetas_disponiveis:
             dropdown_etiquetas.options = [ft.dropdown.Option(etiqueta) for etiqueta in etiquetas_disponiveis]
@@ -210,6 +262,7 @@ def home(page: ft.Page):
         abrir_dialog_produto(e)
         
     def fechar_popup_print(e):
+        
         dialog_print.open = False
         page.update()
         
@@ -307,6 +360,13 @@ def home(page: ft.Page):
         border_width=1,
         options=[]
     )
+    lotes = controller.obter_lote()
+    lote_dropdown = ft.Dropdown(
+        label="Lote",
+        border_radius=ft.border_radius.all(2),
+        border_width=1,
+        options=[]
+    )
 
     novo_tipo_field = ft.TextField(label="Novo Tipo")
 
@@ -388,6 +448,7 @@ def home(page: ft.Page):
                     dropdown_impressoras,
                     dropdown_etiquetas,
                     dropdown_sexo,
+                    lote_dropdown,
                     quantidade_impressao_textfield                               
 
                 ]
@@ -866,12 +927,6 @@ def home(page: ft.Page):
     
     page.update()   
     
-
-    
-
-    
-    
-
     def salvar_novo_tipo(dialog):
         novo_tipo = novo_tipo_field.value
         if novo_tipo:  # Certifique-se de que algo foi digitado

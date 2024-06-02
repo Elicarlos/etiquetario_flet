@@ -1,8 +1,8 @@
 ^XA
+^CI28
 ^MMT
 ^PW831
 ^LL0599
-^CI28
 ^LS0
 ^FO265,36^GB0,543,2^FS
 ^FO289,36^GB0,543,2^FS
@@ -19,19 +19,19 @@
 ^FO579,36^GB0,543,2^FS
 ^FO602,36^GB0,543,4^FS
 ^FO627,36^GB0,543,2^FS
-^FT286,411^A@B:ariblk.ttf,20,19^FB223,1,0,C^FH\^FDINFORMAÇÃO NUTRICIONAL^FS
-^FT382,579^A@B:ariblk.ttf,20,19^FH\^FDValor energ\82tico (kcal)^FS
-^FT310,580^A@B:ariblk.ttf,20,19^FB197,1,0,C^FH\^FDPorção por embalagem:^FS
-^FT430,579^A@B:ariblk.ttf,20,19^FB147,1,0,C^FH\^FDAçucares Totois (g)^FS
-^FT455,579^A@B:ariblk.ttf,20,19^FH\^FDAçucares adicionados (g) ^FS
-^FT479,580^A@B:ariblk.ttf,20,19^FH\^FDProteinas (g)^FS
-^FT503,580^A@B:ariblk.ttf,20,19^FH\^FDGorduras totais (g)^FS
-^FT527,580^A@B:ariblk.ttf,20,19^FB181,1,0,C^FH\^FDGorduras saturadas (g)^FS
-^FT551,580^A@B:ariblk.ttf,20,19^FB145,1,0,C^FH\^FDGorduras trans (g)^FS
-^FT575,580^A@B:ariblk.ttf,20,19^FB149,1,0,C^FH\^FDFibra alimentar (g)^FS
-^FT599,580^A@B:ariblk.ttf,20,19^FB86,1,0,C^FH\^FDSódio (mg)^FS
-^FT623,580^A@B:ariblk.ttf,17,16^FB369,1,0,C^FH\^FD*Percentual de valores diários fornecidos pela porção.^FS
-^FT649,579^A@B:ariblk.ttf,20,19^FB96,1,0,C^FH\^FDALÉRGICOS:^FS
+^FT286,411^A@B:ariblk.ttf,20,19,C^FH\^FD{informacao_nutricional}^FS
+^FT382,579^A@B:ariblk.ttf,20,19^FH\^FD{valor_energetico_kcal}^FS
+^FT310,580^A@B:ariblk.ttf,20,19^FH\^FD{porcoes_por_embagalagem}^FS
+^FT430,579^A@B:ariblk.ttf,20,19^FH\^FD{acucares_totais_g}^FS
+^FT455,579^A@B:ariblk.ttf,20,19^FH\^FD{acucares_adicionados_g}^FS
+^FT479,580^A@B:ariblk.ttf,20,19^FH\^FD{proteinas_g}^FS
+^FT503,580^A@B:ariblk.ttf,20,19^FH\^FD{gorduras_totais_g}^FS
+^FT527,580^A@B:ariblk.ttf,20,19^FH\^FD{gorduras_saturadas_g}^FS
+^FT551,580^A@B:ariblk.ttf,20,19^FH\^FD{gorduras_trans_g}^FS
+^FT575,580^A@B:ariblk.ttf,20,19^FH\^FD{fibra_alimentar_g}^FS
+^FT599,580^A@B:ariblk.ttf,20,19^FH\^FD{sodio_mg}^FS
+^FT623,580^A@B:ariblk.ttf,17,16^FH\^FD{percentual_diario}^FS
+^FT649,579^A@B:ariblk.ttf,20,19^FH\^FD{alergicos}^FS
 ^FO339,270^GB269,0,2^FS
 ^FO337,147^GB271,0,2^FS
 ^FT356,227^A@B:ariblk.ttf,17,16^FB37,1,0,R^FH\^FD100 g^FS
@@ -56,18 +56,16 @@
 ^FT551,135^A@B:ariblk.ttf,20,19^FB90,1,0,C^FH\^FD{g_tra_vd}^FS
 ^FT575,133^A@B:ariblk.ttf,20,19^FB85,1,0,C^FH\^FD{fibra_vd}^FS
 ^FT598,135^A@B:ariblk.ttf,20,19^FB90,1,0,C^FH\^FD{sodio_vd}^FS
-^FT406,579^A@B:ariblk.ttf,20,19^FH\^FDValor energ\82tico (kcal)^FS
-^FT331,580^A@B:ariblk.ttf,20,19^FB68,1,0,C^FH\^FDPor\87\E4es:^FS
-^FT310,378^A@B:ariblk.ttf,20,19^FB229,1,0,C^FH\^FD{porcao_por_embagalagem}^FS
-^FT331,507^A@B:ariblk.ttf,20,19^FB108,1,0,C^FH\^FD{porcao_var}^FS
-^FT259,160^A@B:ariblk.ttf,20,19^FB48,1,0,C^FH\^FD{lote}^FS
+^FT406,579^A@B:ariblk.ttf,20,19^FH\^FD{carboidratos_totais_g}^FS
+^FT331,580^A@B:ariblk.ttf,20,19^FH\^FD{porcao}^FS
+^FT310,378^A@B:ariblk.ttf,20,19^FH\^FD{porcao_por_embalagem}^FS
+^FT331,507^A@B:ariblk.ttf,20,19^FH\^FD{porcao_var}^FS
+^FT259,160^A@B:ariblk.ttf,20,19^FH\^FD{lote}^FS
 ^FT237,97^A@B:ariblk.ttf,20,19^FH\^FD{venc}^FS
 ^FT237,358^A@B:ariblk.ttf,20,19^FH\^FD{fabricacao}^FS
 ^FT259,407^A@B:ariblk.ttf,20,19^FH\^FD{numero_sif}^FS
 ^FT790,224^A@B:ariblk.ttf,20,19^FH\^FD{peso}^FS
-^FT109,342^A@B:ariblk.ttf,28,28^FH\^FD{TIPO}^FS
-^FT163,378^A@B:ariblk.ttf,28,28^FH\^FD{CORTE}^FS
-
-
+^FT129,342^A@B:ariblk.ttf,28,28^FH\^FD{TIPO}^FS
+^FT183,378^A@B:ariblk.ttf,28,28^FH\^FD{CORTE}^FS
 ^FT649,471^A0B,20,19^FH\^FD{campo_adicional}^FS
 ^PQ1,0,1,Y^XZ

@@ -70,9 +70,13 @@ class Controller:
             
 
     @staticmethod
-    def obter_empresas():
-        
+    def obter_empresas():        
         return Empresa.select()
+    
+    
+    @staticmethod
+    def get_empresa():
+        return Empresa.get()
     
     
     @staticmethod

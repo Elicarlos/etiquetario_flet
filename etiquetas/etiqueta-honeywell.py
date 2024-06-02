@@ -1,5 +1,6 @@
 
 import os
+import peewee
 
 from models import Empresa, ItemNutricional
 
@@ -10,10 +11,16 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 dados_etiquetas_dir = os.path.join(script_dir, 'dados_etiquetas')
 
 # def criar_etiqueta(id_produto):
-def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo):   
+def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo, lote, empresa):   
     produto = ItemNutricional.get(ItemNutricional.id == produto_id)
-    empresa  = Empresa.select()
+    sif =  ''
+    adapi =  ''
+    for emp in empresa:
+        sif = emp['numero_sif']
+        adapi = emp['registro_adapi']
+    
 
+   
     tipo = produto.tipo_id    
     corte = produto.corte  
     porcao_embalagem = produto.porcao_embalagem
@@ -39,6 +46,7 @@ def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo):
     fibra_alimentar_vd = produto.fibra_alimentar_vd
     sodio_100g = produto.sodio_100g
     sodio_vd = produto.sodio_vd
+    peso = produto.peso
     informacoes_adicionais = produto.informacoes_adicionais
 
     # Obtem o diretório do script atual
@@ -50,20 +58,29 @@ def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo):
    
     # Caminho completo para o arquivo dentro de 'dados_etiquetas'
     arquivo_path = os.path.join(dados_etiquetas_dir, 'dados.prn')
-    
-    peso = 1000
-    # fabricacao = "20/04/2024"
-    # vencimento = "21/04/2024"
-    lote = 1
-    sif = 10
 
     try:
         with open(arquivo_path, 'r') as arquivo:
             conteudo = arquivo.read()
             conteudo = conteudo.format(
+                informacao_nutricional = 'INFORMAÇÃO NUTRICIONAL',
+                valor_energetico_kcal = 'Valor energético (Kcal)',
+                carboidratos_totais_g = 'Carboidratos totais (g)',
+                porcoes_por_embagalagem = "Porções por embalagens",
+                acucares_totais_g = "Açucares totais (g)",
+                acucares_adicionados_g= 'Açúcares Adicionados (g)',
+                proteinas_g = 'Proteínas (g)',
+                gorduras_totais_g = 'Gorduras totais (g)',
+                gorduras_saturadas_g = "Gorduras saturadas (g)",
+                gorduras_trans_g = "Gorduras trans (g)",
+                fibra_alimentar_g = 'Fibra alimentar (g)',
+                sodio_mg = 'Sódio (mg)',
+                percentual_diario = '*Percentual de valores diários fornecidos pela porção.',
+                alergicos = 'ALÉRGICOS:',
+                porcao = "Porção:",
                 TIPO = tipo,  
                 CORTE = corte,               
-                porcao_por_embagalagem = porcao_embalagem,
+                porcao_por_embalagem = porcao_embalagem,
                 porcao_var = porcao,
                 campo_adicional = campo_adicional,
                 v_ene_100 = valor_energetico_100g,
@@ -90,7 +107,7 @@ def criar_etiqueta(produto_id, fabricacao, vencimento, temperatura, sexo):
                 fabricacao = fabricacao,
                 venc = vencimento,
                 lote = lote,
-                numero_sif =sif,
+                numero_sif = sif,
             )
             return conteudo
     except FileNotFoundError:

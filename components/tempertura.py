@@ -61,7 +61,7 @@ def temperatura(page: ft.Page):
         content=ft.Container(
             expand=True,
             width=400,
-            height=200,
+             height=100,
             margin=ft.margin.Margin(left=0, top=15, right=0, bottom=30),
             content=ft.Column(
                 controls=[nova_temperatura_field]

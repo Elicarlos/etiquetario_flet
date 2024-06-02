@@ -32,13 +32,7 @@ def tipo(page: ft.Page):
             border_width=1
         )
     
-    # def alert(mensagem, bgcolor_message):
-    #     page.snack_bar = ft.SnackBar(
-    #             content=ft.Text(mensagem),
-    #             bgcolor=bgcolor_message,                
-    #         )
-    #     page.snack_bar.open = True
-    
+
     def limpar_campos():
         novo_tipo_field = ""
         page.update()
@@ -65,14 +59,7 @@ def tipo(page: ft.Page):
     
     search_input = create_text_field(hint_text="Busque por código, código de barras ou nome do produto...", label="Buscar", width=500)
     
-    tipo_carne_dropdown = ft.Dropdown(
-        label="Tipo de Carne",
-        border_radius=ft.border_radius.all(2),
-        bgcolor=ft.colors.GREY_100,
-        color=ft.colors.BLUE,
-        border_width=0,
-        options=[]
-    )
+   
 
     novo_tipo_field = ft.TextField(label="Novo Tipo")
 
